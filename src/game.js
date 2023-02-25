@@ -11,7 +11,8 @@ class Game {
     start() {
 		const title = new TitleScreen(this);
 		this.state.currentScene = title
- 		 app.addEventListener("keydown",event =>{
+ 		document.addEventListener("keydown",(event) =>{
+			console.log(event)
 			this.state.currentScene.handleInput(event)
 		})
       	// Start game loop

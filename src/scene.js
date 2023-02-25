@@ -64,23 +64,23 @@ class Menu{
 		return container
 	}
 	handleInput(input){
-		switch(input){
-			case "arrowLeft":
+		switch(input.key){
+			case "ArrowLeft":
 				if(this.pointer>0){
 					this.pointer--
 				}
 				break
-			case "arrowRight":
+			case "ArrowRight":
 				if(this.pointer<this.content.length-1){
 					this.pointer++
 				}
 				break
-			case "arrowUp":
+			case "ArrowUp":
 				if(this.pointer-this.width>=0){
 					this.pointer-=this.width
 				}
 				break
-			case "arrowDown":
+			case "ArrowDown":
 				if(this.pointer+this.width<this.content.length){
 					this.pointer+=this.width
 				}
@@ -162,7 +162,7 @@ class TitleScreen extends Scene{
 		return backgroundImg
 	}
 	handleInput(input){
-		this.menus.handleInput(input)
+		this.menus["main"].handleInput(input)
 	}
 }
 
