@@ -171,9 +171,39 @@ class Overworld extends Scene{
 		this.characters = map.characters
 		this.mapGrid = map.grid
 		this.encounters = map.encounters
+		this.menus = {
+			"start": new Menu()
+		}
+		this.currentMenu = "none"
   	}
 	render(){
-	
+		let sceneContainer = document.createElement("div")
+		let backGroundLayer = document.createElement("canvas")
+		backGroundLayer.id = "overworldBackgroundLayer"
+		let BGctx = backGroundLayer.getContext("2d")
+		for(let row = this.player.posX - 25; row < this.player.posX + 25; row++){
+			for(let column = this.player.posY - 25; column < this.player.posY + 25; column++){
+				if(row>0 || row<this.mapGrid.length || column>0 || column<this.mapGrid[row].length){
+					BGctx.fillStyle = "black";
+            		BGctx.fillRect((row - (this.player.posX - 25)) * 16, (column - (this.player.posY - 25)) * 16, 16, 16);
+				}
+				else{
+					this.mapGrid[row][column].draw(BGctx, row, column, 16)
+				}
+			}
+		}
+		sceneContainer.appendChild(backGroundLayer)
+		let foreGroundLayer = document.createElement("canvas")
+		foreGroundLayer.id = "overworldForegroundLayer"
+		let FGctx = foreGroundLayer.getContext("2d")
+		this.characters.forEach(char => {
+			if(char.posX>this.player.posX-25 && char.posX<this.player.posX+25 && char.posY>this.player.posY-25 && char.posY<this.player.posY+25){
+				//TODO this
+				FGctx.drawImage()
+			}
+		});
+		sceneContainer.appendChild(foreGroundLayer)
+		return sceneContainer
 	}
 }
 
