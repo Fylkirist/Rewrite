@@ -9,13 +9,11 @@ class Game {
     }
   
     start() {
-		app.addEventListener("keydown",event =>{
+		const title = new TitleScreen(this);
+		this.state.currentScene = title
+ 		 app.addEventListener("keydown",event =>{
 			this.state.currentScene.handleInput(event)
 		})
-		
-		const title = new TitleScreen(this);
-		currentScene = title
-  
       	// Start game loop
       	this.loop();
     }
@@ -35,13 +33,13 @@ class Game {
   
     render() {
       	app.innerHTML=""
-		app.appendChild(this.currentScene.render())
+		app.appendChild(this.state.currentScene.render())
     }
-	loadGame(){
+	loadSave(){
 		
 	}
 	newGame(){
-		currentScene = new NewCharScreen(this)
+		this.state.currentScene = new NewCharScreen(this)
 	}
 	initializeNewGame(properties){
 		this.state.mapStates = new MapStateCollection()

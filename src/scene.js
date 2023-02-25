@@ -153,6 +153,7 @@ class TitleScreen extends Scene{
 	render(){
 		let backgroundImg = document.createElement("div")
 		backgroundImg.id = "titleScreenBackground"
+		backgroundImg.style.backgroundImage = "assets/GoldTitle.png"
 
 		let menu = this.menus[this.currentMenu].render()
 		menu.id = "titleScreenMenu"
