@@ -31,8 +31,16 @@
     top: 0px;
     left: 0px;
 }
+
 #overworldbackgroundLayer{
     position: absolute;
     top: 0px;
     left: 0px;
+}
+
+#newCharInfoContainer{
+    border: solid black 2px;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 20px;
 }

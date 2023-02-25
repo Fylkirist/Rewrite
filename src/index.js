@@ -10,3 +10,4 @@ async function createNewPokemon(name, level, moves){
 
 let gameState = new Game()
 gameState.start()
+gameState.initializeEventListener()

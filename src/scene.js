@@ -85,10 +85,10 @@ class Menu{
 					this.pointer+=this.width
 				}
 				break
-			case "A":
+			case "a":
 				this.content[this.pointer].action()
 				break
-			case "S":
+			case "s":
 				this.previous()
 				break
 		}
@@ -147,19 +147,24 @@ class Scene{
 class TitleScreen extends Scene{
 	constructor(state){
 		super(null,
-			{"main":new Menu(2,[{text:"New Game",action:state.newGame()},{text:"Load Game",action:state.loadSave()}],
+			{"main":new Menu(2,[{text:"New Game",action:()=>state.newGame()},{text:"Load Game",action:()=>state.loadSave()}],
 			null)})
 	}
 	render(){
-		let backgroundImg = document.createElement("div")
+		let titleContainer = document.createElement("div")
+		titleContainer.style.width = "100%"
+		titleContainer.style.height = "100%"
+
+		let backgroundImg = document.createElement("img")
 		backgroundImg.id = "titleScreenBackground"
-		backgroundImg.style.backgroundImage = "assets/GoldTitle.png"
+		backgroundImg.src = "../assets/GoldTitle.png"
+		titleContainer.appendChild(backgroundImg)
 
 		let menu = this.menus[this.currentMenu].render()
 		menu.id = "titleScreenMenu"
 		
-		backgroundImg.appendChild(menu)
-		return backgroundImg
+		titleContainer.appendChild(menu)
+		return titleContainer
 	}
 	handleInput(input){
 		this.menus["main"].handleInput(input)
@@ -362,7 +367,7 @@ class NewCharScreen{
 			{text:"Y",action:()=>this.name.push("Y")},
 			{text:"Z",action:()=>this.name.push("Z")},
 			{text:"end",action:()=>{state.initializeNewGame(this)}},
-			{text:"<-",action:()=>{if(this.name.length<0){
+			{text:"<-",action:()=>{if(this.name.length>0){
 				this.name.pop()
 			}}},
 			{text:"clear",action:()=>{this.name = []}},
@@ -399,6 +404,7 @@ class NewCharScreen{
 			}
 			nameContainer.appendChild(charSpan)
 		}
+		newCharInfoContainer.appendChild(nameContainer)
 		
 		newCharBackground.appendChild(newCharInfoContainer)
 
@@ -406,5 +412,8 @@ class NewCharScreen{
 		menu.id = "nameEntryMenu"
 		newCharBackground.appendChild(menu)
 		return newCharBackground
+	}
+	handleInput(input){
+		this.menus.handleInput(input)
 	}
 }

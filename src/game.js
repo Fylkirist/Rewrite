@@ -11,13 +11,15 @@ class Game {
     start() {
 		const title = new TitleScreen(this);
 		this.state.currentScene = title
- 		document.addEventListener("keydown",(event) =>{
-			console.log(event)
-			this.state.currentScene.handleInput(event)
-		})
       	// Start game loop
       	this.loop();
     }
+	initializeEventListener(){
+		document.addEventListener("keydown",(event) =>{
+			console.log(event)
+			this.state.currentScene.handleInput(event)
+		})
+	}
   
     loop() {
   
