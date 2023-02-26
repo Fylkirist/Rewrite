@@ -95,6 +95,38 @@ class Menu{
 	}
 }
 
+class Dialogue{
+	constructor(content,character){
+		this.content = content
+		this.pointer = 0
+		this.character = character
+	}
+	render(){
+		let dialogueWindow = document.createElement("div")
+		dialogueWindow.className = "NPCDialogueWindowContainer"
+
+		let dialoguePortrait = document.createElement("img")
+		dialoguePortrait.src = this.character.sprite
+
+		dialogueWindow.appendChild(dialoguePortrait)
+
+		let dialogueText = document.createElement("div")
+		dialogueText.className = "NPCDialogueText"
+		dialogueText.textContent = `${this.character.name}: ${this.content[this.pointer].text}`
+
+		dialogueWindow.appendChild(dialogueText)
+
+		if(this.content[this.pointer].menu){
+			let dialogueMenu = this.content[this.pointer].menu.render()
+			dialogueWindow.appendChild(dialogueMenu)
+		}
+		return dialogueWindow
+	}
+	handleInput(input){
+		this.content[this.pointer].action(input)
+	}
+}
+
 class MapState{
   	constructor(properties){
 		this.grid = properties.grid
@@ -147,7 +179,9 @@ class Scene{
 class TitleScreen extends Scene{
 	constructor(state){
 		super(null,
-			{"main":new Menu(2,[{text:"New Game",action:()=>state.newGame()},{text:"Load Game",action:()=>state.loadSave()}],
+			{"main":new Menu(2,[
+				{text:"New Game",action:()=>state.newGame()},
+				{text:"Load Game",action:()=>state.loadSave()}],
 			null)})
 	}
 	render(){
@@ -203,7 +237,10 @@ class Overworld extends Scene{
 		foreGroundLayer.id = "overworldForegroundLayer"
 		let FGctx = foreGroundLayer.getContext("2d")
 		this.characters.forEach(char => {
-			if(char.posX>this.player.posX-25 && char.posX<this.player.posX+25 && char.posY>this.player.posY-25 && char.posY<this.player.posY+25){
+			if(char.posX>this.player.posX-25 && 
+				char.posX<this.player.posX+25 && 
+				char.posY>this.player.posY-25 && 
+				char.posY<this.player.posY+25){
 				//TODO this
 				FGctx.drawImage()
 			}
@@ -366,6 +403,33 @@ class NewCharScreen{
 			{text:"X",action:()=>this.name.push("X")},
 			{text:"Y",action:()=>this.name.push("Y")},
 			{text:"Z",action:()=>this.name.push("Z")},
+			{text:"_",action:()=>this.name.push(" ")},
+			{text:"a",action:()=>this.name.push("a")},
+			{text:"b",action:()=>this.name.push("b")},
+			{text:"c",action:()=>this.name.push("c")},
+			{text:"d",action:()=>this.name.push("d")},
+			{text:"e",action:()=>this.name.push("e")},
+			{text:"f",action:()=>this.name.push("f")},
+			{text:"g",action:()=>this.name.push("g")},
+			{text:"h",action:()=>this.name.push("h")},
+			{text:"i",action:()=>this.name.push("i")},
+			{text:"j",action:()=>this.name.push("j")},
+			{text:"k",action:()=>this.name.push("k")},
+			{text:"l",action:()=>this.name.push("l")},
+			{text:"m",action:()=>this.name.push("m")},
+			{text:"n",action:()=>this.name.push("n")},
+			{text:"o",action:()=>this.name.push("o")},
+			{text:"p",action:()=>this.name.push("p")},
+			{text:"q",action:()=>this.name.push("q")},
+			{text:"r",action:()=>this.name.push("r")},
+			{text:"s",action:()=>this.name.push("s")},
+			{text:"t",action:()=>this.name.push("t")},
+			{text:"u",action:()=>this.name.push("u")},
+			{text:"v",action:()=>this.name.push("v")},
+			{text:"w",action:()=>this.name.push("w")},
+			{text:"x",action:()=>this.name.push("x")},
+			{text:"y",action:()=>this.name.push("y")},
+			{text:"z",action:()=>this.name.push("z")},
 			{text:"end",action:()=>{state.initializeNewGame(this)}},
 			{text:"<-",action:()=>{if(this.name.length>0){
 				this.name.pop()
@@ -386,16 +450,17 @@ class NewCharScreen{
 
 		let playerSprite = document.createElement("img")
 		if(this.gender==="male"){
-			playerSprite.src = "placeholder"
+			playerSprite.src = "../assets/maleTestSprite.png"
 		}
 		else{
-			playerSprite.src = "placeholder"
+			playerSprite.src = "../assets/femaleTestSprite.png"
 		}
 		newCharInfoContainer.appendChild(playerSprite)
 		let nameContainer =  document.createElement("div")
 		nameContainer.id = "newCharNameContainer"
 		for(let i = 0; i < 10; i++){
 			let charSpan = document.createElement("span")
+			charSpan.style.margin = "3px"
 			if(this.name.length>i){
 				charSpan.textContent = this.name[i]
 			}
@@ -405,7 +470,6 @@ class NewCharScreen{
 			nameContainer.appendChild(charSpan)
 		}
 		newCharInfoContainer.appendChild(nameContainer)
-		
 		newCharBackground.appendChild(newCharInfoContainer)
 
 		let menu = this.menus.render()

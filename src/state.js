@@ -140,6 +140,7 @@ class Character{
 		this.sprite = options.sprite
 		this.name = options.name
 		this.reward = options.reward
+		this.dialogue = options.dialogue
     }
 }
 

@@ -39,16 +39,34 @@ class Game {
 		app.appendChild(this.state.currentScene.render())
     }
 	loadSave(){
-		
+		let loadedState = window.localStorage.getItem("PKMN-SAVED-STATE")
+		loadedState = JSON.parse(loadedState)
+		this.state.currentScene = loadedState.currentScene
+		this.state.mapStates =	loadedState.mapStates
+		this.state.player = loadedState.player
+	}
+	saveGame(){
+		let saveState = this.state
+		window.localStorage.setItem("PKMN-SAVED-STATE",JSON.stringify(saveState))
 	}
 	newGame(){
 		this.state.currentScene = new NewCharScreen(this)
+	}
+	loadInitialMapStates(){
+		
 	}
 	initializeNewGame(properties){
 		this.state.mapStates = new MapStateCollection()
 		this.state.player = new Player({
 			gender:properties.gender,
-			name:properties.name
+			name:properties.name,
+			party:[],
+			posY:0,
+			posX:0,
+			flags:{},
+			facing:"south",
+			sprite:{},
+			reward:0
 		})
 	}
   }
