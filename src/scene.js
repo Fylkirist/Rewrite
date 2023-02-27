@@ -95,6 +95,50 @@ class Menu{
 	}
 }
 
+class FullScreenMenu extends Menu{
+	constructor(width, content, previous, background){
+		super(width,content,previous)
+		this.background = background
+	}
+	render(){
+		let menuContainer = document.createElement("div")
+		menuContainer.id = "overworldPartyMenuContainer"
+		menuContainer.style.background = this.background
+		
+		for(let i = 0; i < this.content.length; i++){
+			let menuElem = document.createElement("div")
+			menuElem.className("overworldPartyMenuElement")
+
+			let elemPic = document.createElement("img")
+			elemPic.className = "overworldPartyMenuPic"
+
+			let elemName = document.createElement("label")
+			elemName.className = "overworldPartyMenuName"
+			elemName.textContent = this.content[i].name
+
+			let elemHealthLabel = document.createElement("label")
+			elemHealthLabel.className = "overworldPartyMenuHealthLabel"
+			elemHealthLabel.textContent = this.content[i].currentHP
+
+			let elemHealthBarParent = document.createElement("div")
+			elemHealthBarParent.className = "overworldPartyMenuHealthBarParent"
+
+			let elemHealthBarChild = document.createElement("div")
+			elemHealthBarChild.className = "overworldPartyMenuHealthBarChild"
+			elemHealthBarChild.style.width = `${this.content[i].currentHP/this.content[i].stats.hp*100}%`
+			elemHealthBarParent.appendChild(elemHealthBarChild)
+
+			menuElem.appendChild(elemPic)
+			menuElem.appendChild(elemName)
+			menuElem.appendChild(elemHealthLabel)
+			menuElem.appendChild(elemHealthBarParent)
+
+			menuContainer.appendChild(menuElem)
+		}
+		return menuContainer
+	}
+}
+
 class Dialogue{
 	constructor(content,character){
 		this.content = content
@@ -181,8 +225,7 @@ class TitleScreen extends Scene{
 		super(null,
 			{"main":new Menu(2,[
 				{text:"New Game",action:()=>state.newGame()},
-				{text:"Load Game",action:()=>state.loadSave()}],
-			null)})
+				{text:"Load Game",action:()=>{if(state.saveSlot!=""){state.loadSave()}}}],null)})
 	}
 	render(){
 		let titleContainer = document.createElement("div")
@@ -206,13 +249,21 @@ class TitleScreen extends Scene{
 }
 
 class Overworld extends Scene{
-  	constructor(player,map){
+  	constructor(player,map,state){
 		super(player)
 		this.characters = map.characters
 		this.mapGrid = map.grid
 		this.encounters = map.encounters
 		this.menus = {
-			"start": new Menu()
+			"start": new Menu(1[
+				{text:"Save game",action:()=>{state.saveGame()}},
+				{text:"Load game",action:()=>{state.loadSave()}},
+				{text:"PKMN",action:()=>{this.openPartyMenu()}},
+				{text:"Backpack",action:()=>{this.openBagMenu()}},
+				{text:"Player info",action:()=>{this.showPlayerInfo()}},
+				{text:"PokeDex",action:()=>{this.showDex()}},
+				{text:"Map",action:()=>{this.showMap()}}
+			],this.changeMenu("none"))
 		}
 		this.currentMenu = "none"
   	}
@@ -242,11 +293,40 @@ class Overworld extends Scene{
 				char.posY>this.player.posY-25 && 
 				char.posY<this.player.posY+25){
 				//TODO this
-				FGctx.drawImage()
+
 			}
 		});
 		sceneContainer.appendChild(foreGroundLayer)
+		if(this.currentMenu!="none"){
+			let dynamicMenu = this.menus[this.currentMenu].render()
+			dynamicMenu.id = "overworldMenu"
+			sceneContainer.appendChild(dynamicMenu)
+		}
+		
 		return sceneContainer
+	}
+	changeMenu(key){
+		this.currentMenu = key
+	}
+	handleInput(input){
+		if(this.currentMenu!="none"){
+			this.menus[this.currentMenu].handleInput(input)
+		}
+		else{
+			if(input.key = "a"){
+				//TODO open dialogues with the interact button
+			}
+			else{
+				this.player.handleInput(input)
+			}
+		}
+	}
+	openPartyMenu(){
+		this.menus["party"] = new FullScreenMenu(2,[
+			this.player.party.map(elem => {
+				return {}
+			})
+		],this.changeMenu("none"))
 	}
 }
 

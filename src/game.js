@@ -6,6 +6,7 @@ class Game {
         	player: null,
 			mapStates: null
       	};
+		this.saveSlot = window.localStorage.getItem("PKMN-SAVED-STATE")
     }
   
     start() {
@@ -39,7 +40,7 @@ class Game {
 		app.appendChild(this.state.currentScene.render())
     }
 	loadSave(){
-		let loadedState = window.localStorage.getItem("PKMN-SAVED-STATE")
+		let loadedState = this.saveSlot
 		loadedState = JSON.parse(loadedState)
 		this.state.currentScene = loadedState.currentScene
 		this.state.mapStates =	loadedState.mapStates
