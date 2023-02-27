@@ -69,6 +69,7 @@ class Game {
 			sprite:{},
 			reward:0
 		})
+		this.state.currentScene = new Overworld()
 	}
   }
   

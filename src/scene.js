@@ -99,6 +99,7 @@ class FullScreenMenu extends Menu{
 	constructor(width, content, previous, background){
 		super(width,content,previous)
 		this.background = background
+		this.subMenu = false
 	}
 	render(){
 		let menuContainer = document.createElement("div")
@@ -108,9 +109,13 @@ class FullScreenMenu extends Menu{
 		for(let i = 0; i < this.content.length; i++){
 			let menuElem = document.createElement("div")
 			menuElem.className("overworldPartyMenuElement")
+			if(this.pointer == i){
+				menuElem.classList.add("overworldPartySelectedElem")
+			}
 
 			let elemPic = document.createElement("img")
 			elemPic.className = "overworldPartyMenuPic"
+			elemPic.src = this.content[i].sprites.front_default
 
 			let elemName = document.createElement("label")
 			elemName.className = "overworldPartyMenuName"
@@ -134,8 +139,47 @@ class FullScreenMenu extends Menu{
 			menuElem.appendChild(elemHealthBarParent)
 
 			menuContainer.appendChild(menuElem)
+			if(this.subMenu){
+				let subMenuElem = this.subMenu.render()
+				menuContainer.appendChild(subMenuElem)
+			}
 		}
 		return menuContainer
+	}
+	handleInput(input){
+		if(this.subMenu){
+			this.subMenu.handleInput(input)
+		}
+		else{
+			switch(input.key){
+				case "ArrowLeft":
+					if(this.pointer>0){
+						this.pointer--
+					}
+					break
+				case "ArrowRight":
+					if(this.pointer<this.content.length-1){
+						this.pointer++
+					}
+					break
+				case "ArrowUp":
+					if(this.pointer-this.width>=0){
+						this.pointer-=this.width
+					}
+					break
+				case "ArrowDown":
+					if(this.pointer+this.width<this.content.length){
+						this.pointer+=this.width
+					}
+					break
+				case "a":
+					this.subMenu = new Menu(1,[{text:"Switch",action:""},{text:"Summary",action:""},{text:"",action:""},{text:"",action:""}],()=>this.subMenu = false)
+					break
+				case "b":
+					()=>this.previous()
+
+			}	
+		}
 	}
 }
 
@@ -314,7 +358,6 @@ class Overworld extends Scene{
 		}
 		else{
 			if(input.key = "a"){
-				//TODO open dialogues with the interact button
 			}
 			else{
 				this.player.handleInput(input)
@@ -322,11 +365,9 @@ class Overworld extends Scene{
 		}
 	}
 	openPartyMenu(){
-		this.menus["party"] = new FullScreenMenu(2,[
-			this.player.party.map(elem => {
-				return {}
-			})
-		],this.changeMenu("none"))
+		this.menus["party"] = new FullScreenMenu(2,
+		this.player.party
+		,this.changeMenu("none"))
 	}
 }
 
