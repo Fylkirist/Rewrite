@@ -132,7 +132,7 @@ class Pokemon {
 class Character{
     constructor(options){
       	this.posX = options.posX
-      	this.posy = options.posy
+      	this.posY = options.posY
       	this.facing = options.facing
       	this.type = options.type
       	this.flags = options.flags

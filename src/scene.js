@@ -2,43 +2,27 @@ class Tile{
   	constructor(properties){
     	this.type = properties.type
     	this.collision = properties.collision
-    	this.sprite = properties.sprite
 		this.event = properties.event
+		this.sprite = new Image(16,16)
+		this.sprite.src = "../assets/testTileSprites.png"
+		this.spriteCut = {
+			x:properties.spriteX,
+			y:properties.spriteY
+		}
   	}
-	draw(context, x, y, tileSize) {
-		const spriteImg = new Image()
-		spriteImg.src = this.sprite.path
-		spriteImg.addEventListener('load', () => {
-		  context.drawImage(
-			spriteImg,
-			this.sprite.x,
-			this.sprite.y,
-			this.sprite.width,
-			this.sprite.height,
-			x * tileSize,
-			y * tileSize,
-			tileSize,
-			tileSize
-		  )
-		})
+	render(context,coords){
+		context.drawImage(this.sprite,this.spriteCut.x,this.spriteCut.y,16,16,coords.x,coords.y,16,16)
 	}
 }
 const tileDict = {
 	greenTile: new Tile({
-		sprite: {
-		  path: "assets/testTileSprites.png",
-		  position: {
-			x: 111,
-			y: 72
-		  },
-		  size: {
-			width: 16,
-			height: 16
-		  }
-		},
+		spriteX:111,
+		spriteY:72,
 		event:false,
-		collision:false
-	  }),
+	  	collision:false,
+		type:"none"
+		}
+	),
 }
 
 class Menu{
@@ -109,7 +93,7 @@ class FullScreenMenu extends Menu{
 		for(let i = 0; i < this.content.length; i++){
 			let menuElem = document.createElement("div")
 			menuElem.className("overworldPartyMenuElement")
-			if(this.pointer == i){
+			if(this.pointer === i){
 				menuElem.classList.add("overworldPartySelectedElem")
 			}
 
@@ -173,7 +157,7 @@ class FullScreenMenu extends Menu{
 					}
 					break
 				case "a":
-					this.subMenu = new Menu(1,[{text:"Switch",action:""},{text:"Summary",action:""},{text:"",action:""},{text:"",action:""}],()=>this.subMenu = false)
+					this.subMenu = new Menu(1,[{text:"Switch",action:""},{text:"Summary",action:""},{text:"",action:""},{text:"",action:""}],(()=>{this.subMenu = false}))
 					break
 				case "b":
 					()=>this.previous()
@@ -243,7 +227,7 @@ class MapStateCollection{
 			],encounters:[
 				
 			],characters:[
-				new Character({})
+
 			]})
 		]
 	}
@@ -299,7 +283,7 @@ class Overworld extends Scene{
 		this.mapGrid = map.grid
 		this.encounters = map.encounters
 		this.menus = {
-			"start": new Menu(1[
+			"start": new Menu(1,[
 				{text:"Save game",action:()=>{state.saveGame()}},
 				{text:"Load game",action:()=>{state.loadSave()}},
 				{text:"PKMN",action:()=>{this.openPartyMenu()}},
@@ -313,17 +297,17 @@ class Overworld extends Scene{
   	}
 	render(){
 		let sceneContainer = document.createElement("div")
+		sceneContainer.id = "overworldSceneContainer"
 		let backGroundLayer = document.createElement("canvas")
 		backGroundLayer.id = "overworldBackgroundLayer"
 		let BGctx = backGroundLayer.getContext("2d")
-		for(let row = this.player.posX - 25; row < this.player.posX + 25; row++){
-			for(let column = this.player.posY - 25; column < this.player.posY + 25; column++){
-				if(row>0 || row<this.mapGrid.length || column>0 || column<this.mapGrid[row].length){
-					BGctx.fillStyle = "black";
-            		BGctx.fillRect((row - (this.player.posX - 25)) * 16, (column - (this.player.posY - 25)) * 16, 16, 16);
-				}
-				else{
-					this.mapGrid[row][column].draw(BGctx, row, column, 16)
+		BGctx.fillStyle = "black";
+		//BGctx.fillRect(0,0, 16, 16);
+		for(let row = this.player.posY - 25; row < this.player.posY + 25; row++){
+			for(let column = this.player.posX - 25; column < this.player.posX + 25; column++){
+				if(row>=0 && row<this.mapGrid.length && column>=0 && column<this.mapGrid[row].length){
+					console.log(this.mapGrid[row][column])
+					this.mapGrid[row][column].render(BGctx,{x:(column - (this.player.posX - 25))*16,y:(row-(this.player.posY - 25))*16})
 				}
 			}
 		}
@@ -340,7 +324,7 @@ class Overworld extends Scene{
 
 			}
 		});
-		sceneContainer.appendChild(foreGroundLayer)
+		//sceneContainer.appendChild(foreGroundLayer)
 		if(this.currentMenu!="none"){
 			let dynamicMenu = this.menus[this.currentMenu].render()
 			dynamicMenu.id = "overworldMenu"
@@ -357,7 +341,7 @@ class Overworld extends Scene{
 			this.menus[this.currentMenu].handleInput(input)
 		}
 		else{
-			if(input.key = "a"){
+			if(input.key == "a"){
 			}
 			else{
 				this.player.handleInput(input)

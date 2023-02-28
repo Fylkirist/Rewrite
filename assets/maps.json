@@ -2,6 +2,7 @@
     {
         "grid":[],
         "encounters":[],
-        "characters":[]
+        "characters":[],
+        "flags":[]
     }
 ]

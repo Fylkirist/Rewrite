@@ -30,12 +30,18 @@
     position: absolute;
     top: 0px;
     left: 0px;
+    width: 800px;
+    height: 800px;
+    margin: 10px;
 }
 
-#overworldbackgroundLayer{
+#overworldBackgroundLayer{
     position: absolute;
     top: 0px;
     left: 0px;
+    width: 800px;
+    height: 800px;
+    margin: 10px
 }
 
 #newCharInfoContainer{
@@ -43,4 +49,9 @@
     border-radius: 5px;
     margin: 5px;
     padding: 20px;
+}
+
+#overworldSceneContainer{
+    height: 100%;
+    width: 100%;
 }

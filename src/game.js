@@ -4,9 +4,11 @@ class Game {
       	this.state = {
         	currentScene: null,
         	player: null,
-			mapStates: null
+			mapStates: null,
+			currentMap: 0
       	};
 		this.saveSlot = window.localStorage.getItem("PKMN-SAVED-STATE")
+		this.runFlag = 1
     }
   
     start() {
@@ -23,14 +25,20 @@ class Game {
 	}
   
     loop() {
-  
+		if(this.runFlag==1){
 
-      	this.render();
-  
-      	// Repeat loop
-      	requestAnimationFrame(this.loop.bind(this));
+			
+			this.render();
+			
+			// Repeat loop
+			requestAnimationFrame(this.loop.bind(this));
+		}
     }
-  
+	
+	stop(){
+
+	}
+
     updateState() {
       	
     }
@@ -66,10 +74,14 @@ class Game {
 			posX:0,
 			flags:{},
 			facing:"south",
-			sprite:{},
+			sprite:{big:`${properties.gender}TestSprite.png`,
+			"east":`${properties.gender}TestSprite.png`,
+			"west":`${properties.gender}TestSprite.png`,
+			"south":`${properties.gender}TestSprite.png`,
+			"north":`${properties.gender}TestSprite.png`},
 			reward:0
 		})
-		this.state.currentScene = new Overworld()
+		this.state.currentScene = new Overworld(this.state.player,this.state.mapStates.mapStates[this.state.currentMap],this.state)
 	}
   }
   
