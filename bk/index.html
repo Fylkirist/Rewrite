@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="app.css"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <script>
+          var canva;
+          var cctx;
+
+          window.onload = function() {
+              canva = document.getElementById("testcanvas");
+              cctx = canva.getContext("2d");
+              canva.width = 400;
+              canva.height = 400;
+              cctx.fillStyle = "black";
+              cctx.fillRect(0, 0, canva.width, canva.height);
+              
+              render("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lJREFUeNpEU11sFFUYPffemdmZ7i5ddmkXSLO7FGsbFCQCJkj8Qf6aEk2MSVMD8uIP4otGo4EaMfEBfOBVH3gymhgkaIxREwQNoVhtoIgUti0t4q6k7tbd7nZ2d3b+7ox3tv6c5My9d+53zky+cy/xfR/vq+wMgOOHTT4e6927uc8ovBjm1qPj0XQnljAheEHwa8ErwYvq9DetDfKPgR8svk3cf2xBDg/tL4x1B+t9JgcR4+C+Ezj8XB2zn/3kXfzFOL+rdPW9Wsn8MaihQrw/mLwwHMNA+cZwIA7mAXIWkK9zHP3gVbxxUsOelzL0taf93TwcOZ95KD7YMiAEj8cTrCV4ZiiOdFrGv7jUzvB6TMFN3cLgwQE88W4G3U/2Yedb96m1Gj25bm/HSsoo2bSmR7aNvAuv2sTmrdH/zFqGFNAhoZK6B35IwaejMWQeTiKR0trrRecIlUNk9eoupjhND+HM0tebi0ms6H8en59agH+uil+vlnHj4u/wwJCdtbG46KJ3VwKNkrldEj1cFo5RSJTAqFFEHlnbMpHkbGucmymgkp1Eba4A15MwPkmhUY5kWkWjwvsky/RCcAF1FcXIdzU431/BXKEVCo7t+RDOx6dFVFyIPDRNgmTGQGzZAiqGAVN3JRqSSb22KAQir3iSoSPqYZUwCzB89hV8sfUHHN2Sgz5fgq1X8FhXHqgsoD5VhBYhhiT6f/3PvLMtupzh3nUq/phwsT4tYcMWFWHVxVjuL+DLC3C7XkZKy+PgxklYBRt3L1XAiDchudw/NTNhP9iekLTOlIqu9XG4Nsf4zw3kbtviP27iSPhZbGubxqH+MhLMQnWmiuxlBiUWP0eOh2hEYxiRCNm4fSgKNSSBcwlUZbhTUVDSTbSRBlKdDjKZEJoi0snROn7LafrKVEcv2ykRu+njmuBTxawdVtsI2jQO6rhIyE2sjZhIqoDi0eDgI3fLxXTWMWfr1iH9enlUCpr1jsnH+mX65gPACWvU6EhEKLp7FbTHCZqaKBDHY/6ug9wIge7A/KrA397h4ZNW3MFD3Aecdf3irI+PBmRyoGH4y8vXLIW7S+koKgGNUrdQQ+OMzk/fcr2pHaGlpAj+R3B1k4I9PYxsSjOyIcbIClFAStyfz3N/6jb3L4v9KcGi4Hwg+luAAQD0OGaLejQqagAAAABJRU5ErkJggg==", 0, 0, 1);
+              };
+              
+       
+              myimg = document.createElement('img');
+              myimg.src = "./maleTestSprite.png"
+              myimg.onload=function(){ 
+              render(myimg,50,50,2); }
+              
+          function render(img, x, y, o) {
+              console.log(o);
+              var i = new Image;
+
+              i.onload=function(){
+                cctx.drawImage(i, x, y);
+              }
+              i.src = img;
+          }
+      </script>
+    <title>Pkmn</title>
+</head>
+<body>
+    <div id="app"></div>
+    <img src="./maleTestSprite.png">
+    Hei og hopp
+          <canvas id="testcanvas"></canvas> 
+
+</body>
+</html>
