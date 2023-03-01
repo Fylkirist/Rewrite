@@ -39,9 +39,9 @@
     position: absolute;
     top: 0px;
     left: 0px;
+    margin: 10px;
     width: 800px;
     height: 800px;
-    margin: 10px
 }
 
 #newCharInfoContainer{
@@ -54,4 +54,15 @@
 #overworldSceneContainer{
     height: 100%;
     width: 100%;
+}
+
+#overworldMenu{
+    position:absolute;
+    z-index: 9;
+    background:white;
+}
+
+#overworldPartyMenuContainer{
+    width: 800px;
+    height: 800px;
 }

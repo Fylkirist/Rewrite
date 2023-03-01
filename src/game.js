@@ -30,8 +30,8 @@ class Game {
 			
 			this.render();
 			
-			// Repeat loop
-			requestAnimationFrame(this.loop.bind(this));
+			
+			requestAnimationFrame(this.loop.bind(this))
 		}
     }
 	
@@ -74,11 +74,6 @@ class Game {
 			posX:0,
 			flags:{},
 			facing:"south",
-			sprite:{big:`${properties.gender}TestSprite.png`,
-			"east":`${properties.gender}TestSprite.png`,
-			"west":`${properties.gender}TestSprite.png`,
-			"south":`${properties.gender}TestSprite.png`,
-			"north":`${properties.gender}TestSprite.png`},
 			reward:0
 		})
 		this.state.currentScene = new Overworld(this.state.player,this.state.mapStates.mapStates[this.state.currentMap],this.state)

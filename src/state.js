@@ -142,6 +142,14 @@ class Character{
 		this.reward = options.reward
 		this.dialogue = options.dialogue
     }
+	render(params){
+		if(params.situation=="overworld"){
+			params.context.drawImage(charSprites,this.sprite[this.facing].x,this.sprite[this.facing].y,16,21,params.x,params.y,16,21)
+		}
+		else if(params.situation=="battle"){
+
+		}
+	}
 }
 
 class Player extends Character{
@@ -151,11 +159,29 @@ class Player extends Character{
 			flags:options.flags, 
 			party:options.party,
 			facing:options.facing,
-			sprite:options.sprite,
+			sprite:{
+				"female":{
+					"south":{x:4,y:5},
+					"north":{x:125,y:5},
+					"west":{x:64,y:5},
+					"east":{x:185,y:5}
+				},
+				"male":{
+					"south":{x:6,y:7},
+					"north":{x:127,y:7},
+					"west":{x:66,y:7},
+					"east":{x:187,y:7}
+				}
+			},
 			name:options.name
 		})
       	this.gender = options.gender
       	this.money = 0
       	this.items = []
     }
+	render(params){
+		if(params.situation == "overworld"){
+			params.context.drawImage(playerSprites[this.gender],this.sprite[this.gender][this.facing].x,this.sprite[this.gender][this.facing].y,18,21,200,200,18,21)
+		}
+	}
 }

@@ -3,15 +3,13 @@ class Tile{
     	this.type = properties.type
     	this.collision = properties.collision
 		this.event = properties.event
-		this.sprite = new Image(16,16)
-		this.sprite.src = "../assets/testTileSprites.png"
 		this.spriteCut = {
 			x:properties.spriteX,
 			y:properties.spriteY
 		}
   	}
 	render(context,coords){
-		context.drawImage(this.sprite,this.spriteCut.x,this.spriteCut.y,16,16,coords.x,coords.y,16,16)
+		context.drawImage(tileSheet,this.spriteCut.x,this.spriteCut.y,16,16,coords.x,coords.y,16,16)
 	}
 }
 const tileDict = {
@@ -80,15 +78,14 @@ class Menu{
 }
 
 class FullScreenMenu extends Menu{
-	constructor(width, content, previous, background){
+	constructor(width, content, previous){
 		super(width,content,previous)
-		this.background = background
+		
 		this.subMenu = false
 	}
 	render(){
 		let menuContainer = document.createElement("div")
 		menuContainer.id = "overworldPartyMenuContainer"
-		menuContainer.style.background = this.background
 		
 		for(let i = 0; i < this.content.length; i++){
 			let menuElem = document.createElement("div")
@@ -159,32 +156,26 @@ class FullScreenMenu extends Menu{
 				case "a":
 					this.subMenu = new Menu(1,[{text:"Switch",action:""},{text:"Summary",action:""},{text:"",action:""},{text:"",action:""}],(()=>{this.subMenu = false}))
 					break
-				case "b":
-					()=>this.previous()
-
+				case "s":
+					this.previous()
+					break
 			}	
 		}
 	}
 }
 
 class Dialogue{
-	constructor(content,character){
+	constructor(content){
 		this.content = content
 		this.pointer = 0
-		this.character = character
 	}
 	render(){
 		let dialogueWindow = document.createElement("div")
 		dialogueWindow.className = "NPCDialogueWindowContainer"
 
-		let dialoguePortrait = document.createElement("img")
-		dialoguePortrait.src = this.character.sprite
-
-		dialogueWindow.appendChild(dialoguePortrait)
-
 		let dialogueText = document.createElement("div")
 		dialogueText.className = "NPCDialogueText"
-		dialogueText.textContent = `${this.character.name}: ${this.content[this.pointer].text}`
+		dialogueText.textContent = `${this.content[this.pointer].text}`
 
 		dialogueWindow.appendChild(dialogueText)
 
@@ -195,7 +186,10 @@ class Dialogue{
 		return dialogueWindow
 	}
 	handleInput(input){
-		this.content[this.pointer].action(input)
+		if(this.content[this.pointer].menu){
+			this.content[this.pointer].menu.action(input)
+		}
+		
 	}
 }
 
@@ -227,7 +221,21 @@ class MapStateCollection{
 			],encounters:[
 				
 			],characters:[
-
+				new Character({name:"bruh",
+				posX:1,
+				posY:1,
+				facing:"south",
+				flags:{},
+				type:"trainer",
+				dialogue:new Dialogue([{text:"Test 1",},{text:"Test 2",menu: new Menu(1,[{text:"yes",action:""},{text:"no",action:""}])}]),
+				party:[],
+				sprite:{
+					"south":{x:1,y:1},
+					"east":{x:1,y:1},
+					"north":{x:1,y:1},
+					"west":{x:1,y:1}
+				},
+				reward:1500})
 			]})
 		]
 	}
@@ -291,7 +299,7 @@ class Overworld extends Scene{
 				{text:"Player info",action:()=>{this.showPlayerInfo()}},
 				{text:"PokeDex",action:()=>{this.showDex()}},
 				{text:"Map",action:()=>{this.showMap()}}
-			],this.changeMenu("none"))
+			],()=>this.changeMenu("none"))
 		}
 		this.currentMenu = "none"
   	}
@@ -300,31 +308,28 @@ class Overworld extends Scene{
 		sceneContainer.id = "overworldSceneContainer"
 		let backGroundLayer = document.createElement("canvas")
 		backGroundLayer.id = "overworldBackgroundLayer"
+		backGroundLayer.width = 400
+		backGroundLayer.height = 400
 		let BGctx = backGroundLayer.getContext("2d")
 		BGctx.fillStyle = "black";
-		//BGctx.fillRect(0,0, 16, 16);
-		for(let row = this.player.posY - 25; row < this.player.posY + 25; row++){
-			for(let column = this.player.posX - 25; column < this.player.posX + 25; column++){
+		BGctx.fillRect(0,0, 400, 400);
+		for(let row = this.player.posY - 13; row < this.player.posY + 12; row++){
+			for(let column = this.player.posX - 13; column < this.player.posX + 12; column++){
 				if(row>=0 && row<this.mapGrid.length && column>=0 && column<this.mapGrid[row].length){
-					console.log(this.mapGrid[row][column])
-					this.mapGrid[row][column].render(BGctx,{x:(column - (this.player.posX - 25))*16,y:(row-(this.player.posY - 25))*16})
+					this.mapGrid[row][column].render(BGctx,{x:(column - (this.player.posX - 10))*16,y:(row-(this.player.posY - 10))*16})
 				}
 			}
 		}
 		sceneContainer.appendChild(backGroundLayer)
-		let foreGroundLayer = document.createElement("canvas")
-		foreGroundLayer.id = "overworldForegroundLayer"
-		let FGctx = foreGroundLayer.getContext("2d")
 		this.characters.forEach(char => {
-			if(char.posX>this.player.posX-25 && 
-				char.posX<this.player.posX+25 && 
-				char.posY>this.player.posY-25 && 
-				char.posY<this.player.posY+25){
-				//TODO this
-
+			if(char.posX>this.player.posX-12 && 
+				char.posX<this.player.posX+13 && 
+				char.posY>this.player.posY-12 && 
+				char.posY<this.player.posY+13){
+				char.render({situation:"overworld",context:BGctx,x:(char.posX-this.player.posX+12)*16,y:(char.posY-this.player.posY+12)*16})
 			}
 		});
-		//sceneContainer.appendChild(foreGroundLayer)
+		this.player.render({situation:"overworld",context:BGctx})
 		if(this.currentMenu!="none"){
 			let dynamicMenu = this.menus[this.currentMenu].render()
 			dynamicMenu.id = "overworldMenu"
@@ -341,17 +346,43 @@ class Overworld extends Scene{
 			this.menus[this.currentMenu].handleInput(input)
 		}
 		else{
-			if(input.key == "a"){
-			}
-			else{
-				this.player.handleInput(input)
+			console.log(this.player.posY,this.player.posX)
+			switch(input.key){
+				case "ArrowUp":
+					if(this.player.facing == "north"){
+						this.player.posY--
+					}
+					this.player.facing = "north"
+					break
+				case "ArrowDown":
+					if(this.player.facing == "south"){
+						this.player.posY++
+					}
+					this.player.facing = "south"
+					break
+				case "ArrowRight":
+					if(this.player.facing == "east"){
+						this.player.posX++
+					}
+					this.player.facing = "east"
+					break
+				case "ArrowLeft":
+					if(this.player.facing == "west"){
+						this.player.posX--
+					}
+					this.player.facing = "west"
+					break
+				case "x":
+					this.changeMenu("start")
 			}
 		}
 	}
 	openPartyMenu(){
 		this.menus["party"] = new FullScreenMenu(2,
-		this.player.party
-		,this.changeMenu("none"))
+		this.player.party,
+		(()=>{this.changeMenu("start")})
+		)
+		this.changeMenu("party")
 	}
 }
 
