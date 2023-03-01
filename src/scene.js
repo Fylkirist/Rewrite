@@ -85,7 +85,7 @@ class FullScreenMenu extends Menu{
 	}
 	render(){
 		let menuContainer = document.createElement("div")
-		menuContainer.id = "overworldPartyMenuContainer"
+		menuContainer.className = "overworldPartyMenuContainer"
 		
 		for(let i = 0; i < this.content.length; i++){
 			let menuElem = document.createElement("div")
@@ -112,6 +112,7 @@ class FullScreenMenu extends Menu{
 			let elemHealthBarChild = document.createElement("div")
 			elemHealthBarChild.className = "overworldPartyMenuHealthBarChild"
 			elemHealthBarChild.style.width = `${this.content[i].currentHP/this.content[i].stats.hp*100}%`
+			elemHealthBarChild.style.background = "green"
 			elemHealthBarParent.appendChild(elemHealthBarChild)
 
 			menuElem.appendChild(elemPic)

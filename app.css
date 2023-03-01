@@ -62,7 +62,19 @@
     background:white;
 }
 
-#overworldPartyMenuContainer{
+.overworldPartyMenuContainer{
     width: 800px;
     height: 800px;
+    background:white;
+    position:absolute;
+}
+
+.overworldPartyMenuElement{
+    display: grid;
+    padding: 20px;
+    border: solid black 1px;
+}
+
+.overworldPartySelectedElem{
+    border: solid red 2px;
 }

@@ -56,6 +56,7 @@ class Game {
 	}
 	saveGame(){
 		let saveState = this.state
+		this.saveSlot = saveState
 		window.localStorage.setItem("PKMN-SAVED-STATE",JSON.stringify(saveState))
 	}
 	newGame(){
