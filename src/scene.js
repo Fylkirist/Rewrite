@@ -21,6 +21,14 @@ const tileDict = {
 		type:"none"
 		}
 	),
+	greenGrassTile: new Tile({
+		spriteX:63,
+		spriteY:72,
+		event:{chance:0.10,event:"battle"},
+	  	collision:false,
+		type:"none"
+		}
+	)
 }
 
 class Menu{
@@ -89,7 +97,7 @@ class FullScreenMenu extends Menu{
 		
 		for(let i = 0; i < this.content.length; i++){
 			let menuElem = document.createElement("div")
-			menuElem.className("overworldPartyMenuElement")
+			menuElem.className="overworldPartyMenuElement"
 			if(this.pointer === i){
 				menuElem.classList.add("overworldPartySelectedElem")
 			}
@@ -102,9 +110,13 @@ class FullScreenMenu extends Menu{
 			elemName.className = "overworldPartyMenuName"
 			elemName.textContent = this.content[i].name
 
+			let elemLevel = document.createElement("label")
+			elemLevel.className = "overworldPartyMenuLevel"
+			elemLevel.textContent = this.content[i].level
+
 			let elemHealthLabel = document.createElement("label")
 			elemHealthLabel.className = "overworldPartyMenuHealthLabel"
-			elemHealthLabel.textContent = this.content[i].currentHP
+			elemHealthLabel.textContent = `${this.content[i].currentHP}/${this.content[i].stats.hp}`
 
 			let elemHealthBarParent = document.createElement("div")
 			elemHealthBarParent.className = "overworldPartyMenuHealthBarParent"
@@ -112,20 +124,18 @@ class FullScreenMenu extends Menu{
 			let elemHealthBarChild = document.createElement("div")
 			elemHealthBarChild.className = "overworldPartyMenuHealthBarChild"
 			elemHealthBarChild.style.width = `${this.content[i].currentHP/this.content[i].stats.hp*100}%`
-			elemHealthBarChild.style.background = "green"
 			elemHealthBarParent.appendChild(elemHealthBarChild)
 
 			menuElem.appendChild(elemPic)
 			menuElem.appendChild(elemName)
 			menuElem.appendChild(elemHealthLabel)
 			menuElem.appendChild(elemHealthBarParent)
-
 			menuContainer.appendChild(menuElem)
-			if(this.subMenu){
+		}
+		if(this.subMenu){
 				let subMenuElem = this.subMenu.render()
 				menuContainer.appendChild(subMenuElem)
 			}
-		}
 		return menuContainer
 	}
 	handleInput(input){
@@ -182,6 +192,7 @@ class Dialogue{
 
 		if(this.content[this.pointer].menu){
 			let dialogueMenu = this.content[this.pointer].menu.render()
+			dialogueMenu.id = "overworldDialogueMenu"
 			dialogueWindow.appendChild(dialogueMenu)
 		}
 		return dialogueWindow
@@ -206,21 +217,27 @@ class MapStateCollection{
 	constructor(){
 		this.mapStates = [
 			new MapState({grid:[
-				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
-				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
-				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
-				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
-				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
-				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
-				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
-				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
-				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
-				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
-				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
-				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
-				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
+				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
+				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
+				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
+				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
+				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
+				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
+				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
+				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
+				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
+				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
+				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
+				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
+				[tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile,tileDict.greenTile],
+				[tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile],
+				[tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile],
+				[tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile],
+				[tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile],
+				[tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile],
+				[tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile]
 			],encounters:[
-				
+				createNewPokemon("bulbasaur",10,[]),createNewPokemon("charmander",10,[])
 			],characters:[
 				new Character({name:"bruh",
 				posX:1,
@@ -317,7 +334,7 @@ class Overworld extends Scene{
 		for(let row = this.player.posY - 13; row < this.player.posY + 12; row++){
 			for(let column = this.player.posX - 13; column < this.player.posX + 12; column++){
 				if(row>=0 && row<this.mapGrid.length && column>=0 && column<this.mapGrid[row].length){
-					this.mapGrid[row][column].render(BGctx,{x:(column - (this.player.posX - 10))*16,y:(row-(this.player.posY - 10))*16})
+					this.mapGrid[row][column].render(BGctx,{x:(column - (this.player.posX - 13))*16-8,y:(row-(this.player.posY - 13))*16-8})
 				}
 			}
 		}
@@ -327,7 +344,7 @@ class Overworld extends Scene{
 				char.posX<this.player.posX+13 && 
 				char.posY>this.player.posY-12 && 
 				char.posY<this.player.posY+13){
-				char.render({situation:"overworld",context:BGctx,x:(char.posX-this.player.posX+12)*16,y:(char.posY-this.player.posY+12)*16})
+				char.render({situation:"overworld",context:BGctx,x:(char.posX-this.player.posX+13)*16-8,y:(char.posY-this.player.posY+13)*16-8})
 			}
 		});
 		this.player.render({situation:"overworld",context:BGctx})
@@ -342,40 +359,51 @@ class Overworld extends Scene{
 	changeMenu(key){
 		this.currentMenu = key
 	}
+	
+	
 	handleInput(input){
 		if(this.currentMenu!="none"){
 			this.menus[this.currentMenu].handleInput(input)
 		}
 		else{
 			console.log(this.player.posY,this.player.posX)
+			const dirDict = {
+				"ArrowUp":"north",
+				"ArrowDown":"south",
+				"ArrowRight":"east",
+				"ArrowLeft":"west",
+			}
 			switch(input.key){
 				case "ArrowUp":
-					if(this.player.facing == "north"){
-						this.player.posY--
-					}
-					this.player.facing = "north"
-					break
 				case "ArrowDown":
-					if(this.player.facing == "south"){
-						this.player.posY++
-					}
-					this.player.facing = "south"
-					break
 				case "ArrowRight":
-					if(this.player.facing == "east"){
-						this.player.posX++
-					}
-					this.player.facing = "east"
-					break
 				case "ArrowLeft":
-					if(this.player.facing == "west"){
-						this.player.posX--
-					}
-					this.player.facing = "west"
+					this.handleMove(dirDict[input.key], this.player)
 					break
 				case "x":
 					this.changeMenu("start")
 			}
+		}
+	}
+	handleMove(direction, char){
+		const dirTranslate={
+			"north":{x:0,y:-1},
+			"south":{x:0,y:1},
+			"east":{x:1,y:0},
+			"west":{x:-1,y:0},
+		}
+		console.log(direction,dirTranslate[direction])
+		if(char.facing != direction){
+			char.facing = direction
+			return
+		}
+		if(char.posX+dirTranslate[direction].x >= 0 && 
+			char.posX+dirTranslate[direction].x < this.mapGrid[char.posY].length && 
+			char.posY+dirTranslate[direction].y >=0 &&
+			char.posY+dirTranslate[direction].y < this.mapGrid.length &&
+			this.mapGrid[char.posY+dirTranslate[direction].y][char.posX+dirTranslate[direction].x].collision == false){
+			char.posX += dirTranslate[direction].x
+			char.posY += dirTranslate[direction].y
 		}
 	}
 	openPartyMenu(){

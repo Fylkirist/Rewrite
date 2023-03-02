@@ -9,6 +9,7 @@ class Game {
       	};
 		this.saveSlot = window.localStorage.getItem("PKMN-SAVED-STATE")
 		this.runFlag = 1
+		this.animQueue = []
     }
   
     start() {
@@ -34,15 +35,7 @@ class Game {
 			requestAnimationFrame(this.loop.bind(this))
 		}
     }
-	
-	stop(){
 
-	}
-
-    updateState() {
-      	
-    }
-  
     render() {
       	app.innerHTML=""
 		app.appendChild(this.state.currentScene.render())
@@ -65,7 +58,7 @@ class Game {
 	loadInitialMapStates(){
 		
 	}
-	initializeNewGame(properties){
+	async initializeNewGame(properties){
 		this.state.mapStates = new MapStateCollection()
 		this.state.player = new Player({
 			gender:properties.gender,
@@ -77,7 +70,7 @@ class Game {
 			facing:"south",
 			reward:0
 		})
-		this.state.currentScene = new Overworld(this.state.player,this.state.mapStates.mapStates[this.state.currentMap],this.state)
+		this.state.currentScene = new Overworld(this.state.player,this.state.mapStates.mapStates[this.state.currentMap],this)
 	}
   }
   

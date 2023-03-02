@@ -67,6 +67,9 @@
     height: 800px;
     background:white;
     position:absolute;
+    display: grid;
+    grid-template-columns: 400px 400px;
+    grid-template-rows: 200px 200px 200px;
 }
 
 .overworldPartyMenuElement{
@@ -77,4 +80,17 @@
 
 .overworldPartySelectedElem{
     border: solid red 2px;
+}
+
+#overworldDialogueMenu{
+    border: solid black 2px;
+    background: white;
+}
+.overworldPartyMenuHealthBarParent{
+    border: solid black 1px;
+    height: 10px;
+}
+.overworldPartyMenuHealthBarChild{
+    height: 100%;
+    background: green;
 }

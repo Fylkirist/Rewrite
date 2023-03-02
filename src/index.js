@@ -14,7 +14,7 @@ const playerSprites = {
 }
 
 playerSprites.male.src = "../assets/maleTestOverworldSprite.png"
-playerSprites.female.src = "../assets/femaleTestOverworldSprite.gif"
+playerSprites.female.src = "../assets/femaleTestOverworldSprite.png"
 
 async function createNewPokemon(name, level, moves){
   	let data = await P.getPokemonByName(name)

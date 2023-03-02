@@ -181,7 +181,7 @@ class Player extends Character{
     }
 	render(params){
 		if(params.situation == "overworld"){
-			params.context.drawImage(playerSprites[this.gender],this.sprite[this.gender][this.facing].x,this.sprite[this.gender][this.facing].y,18,21,200,200,18,21)
+			params.context.drawImage(playerSprites[this.gender],this.sprite[this.gender][this.facing].x,this.sprite[this.gender][this.facing].y,18,21,199,195,18,21)
 		}
 	}
 }
