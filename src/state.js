@@ -62,12 +62,12 @@ class Pokemon {
       	};
       	this.nature = natures[Object.keys(natures)[Math.floor(Math.random() * Object.keys(natures).length)]];
       	this.stats = {
-        	hp: (2*this.baseStats.hp+this.IVs.hp)*level/100+level+10,
-        	attack: (((2*this.baseStats.attack+this.IVs.attack)*level/100)+5)*this.nature.attack,
-        	defense: (((2*this.baseStats.defense+this.IVs.defense)*level/100)+5)*this.nature.defense,
-        	specialAttack: (((2*this.baseStats.specialAttack+this.IVs.specialAttack)*level/100)+5)*this.nature.specialAttack,
-        	specialDefense: (((2*this.baseStats.specialDefense+this.IVs.specialDefense)*level/100)+5)*this.nature.specialDefense,
-        	speed: (((2*this.baseStats.speed+this.IVs.speed)*level/100)+5)*this.nature.speed
+        	hp: Math.ceil((2*this.baseStats.hp+this.IVs.hp)*level/100+level+10),
+        	attack: Math.ceil((((2*this.baseStats.attack+this.IVs.attack)*level/100)+5)*this.nature.attack),
+        	defense: Math.ceil((((2*this.baseStats.defense+this.IVs.defense)*level/100)+5)*this.nature.defense),
+        	specialAttack: Math.ceil((((2*this.baseStats.specialAttack+this.IVs.specialAttack)*level/100)+5)*this.nature.specialAttack),
+        	specialDefense: Math.ceil((((2*this.baseStats.specialDefense+this.IVs.specialDefense)*level/100)+5)*this.nature.specialDefense),
+        	speed: Math.ceil((((2*this.baseStats.speed+this.IVs.speed)*level/100)+5)*this.nature.speed)
       	}
       	this.speciesData = speciesData
 		this.data = data
@@ -183,5 +183,8 @@ class Player extends Character{
 		if(params.situation == "overworld"){
 			params.context.drawImage(playerSprites[this.gender],this.sprite[this.gender][this.facing].x,this.sprite[this.gender][this.facing].y,18,21,199,195,18,21)
 		}
+	}
+	useItem(item,target){
+		
 	}
 }

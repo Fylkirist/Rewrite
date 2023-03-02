@@ -112,7 +112,7 @@ class FullScreenMenu extends Menu{
 
 			let elemLevel = document.createElement("label")
 			elemLevel.className = "overworldPartyMenuLevel"
-			elemLevel.textContent = this.content[i].level
+			elemLevel.textContent = `lvl. ${this.content[i].level}`
 
 			let elemHealthLabel = document.createElement("label")
 			elemHealthLabel.className = "overworldPartyMenuHealthLabel"
@@ -128,6 +128,7 @@ class FullScreenMenu extends Menu{
 
 			menuElem.appendChild(elemPic)
 			menuElem.appendChild(elemName)
+			menuElem.appendChild(elemLevel)
 			menuElem.appendChild(elemHealthLabel)
 			menuElem.appendChild(elemHealthBarParent)
 			menuContainer.appendChild(menuElem)
@@ -397,11 +398,18 @@ class Overworld extends Scene{
 			char.facing = direction
 			return
 		}
+		let charCollision = false
+		for(let i = 0; i < this.characters.length; i++){
+			if(this.characters[i].posX == char.posX+dirTranslate[direction].x && this.characters[i].posY == char.posY+dirTranslate[direction].y){
+				charCollision = true
+			}
+		}
 		if(char.posX+dirTranslate[direction].x >= 0 && 
 			char.posX+dirTranslate[direction].x < this.mapGrid[char.posY].length && 
 			char.posY+dirTranslate[direction].y >=0 &&
 			char.posY+dirTranslate[direction].y < this.mapGrid.length &&
-			this.mapGrid[char.posY+dirTranslate[direction].y][char.posX+dirTranslate[direction].x].collision == false){
+			this.mapGrid[char.posY+dirTranslate[direction].y][char.posX+dirTranslate[direction].x].collision == false &&
+			charCollision == false){
 			char.posX += dirTranslate[direction].x
 			char.posY += dirTranslate[direction].y
 		}
@@ -412,6 +420,13 @@ class Overworld extends Scene{
 		(()=>{this.changeMenu("start")})
 		)
 		this.changeMenu("party")
+	}
+	openBagMenu(){
+		this.menus["bag"] = new Menu(1,
+			this.player.items.map(elem => {
+
+			}),
+			this.changeMenu("party"))
 	}
 }
 
@@ -530,7 +545,7 @@ class Battle extends Scene{
 		return infoBox
 	}
 	selectAction(type, action){
-
+		
 	}
 	handleBattleLogic(playerAction){
 

@@ -63,7 +63,7 @@ class Game {
 		this.state.player = new Player({
 			gender:properties.gender,
 			name:properties.name,
-			party:[],
+			party:[await createNewPokemon("umbreon",20,["bite","growl","confuse-ray","quick-attack"])],
 			posY:0,
 			posX:0,
 			flags:{},
@@ -71,6 +71,9 @@ class Game {
 			reward:0
 		})
 		this.state.currentScene = new Overworld(this.state.player,this.state.mapStates.mapStates[this.state.currentMap],this)
+	}
+	startBattle(){
+
 	}
   }
   
