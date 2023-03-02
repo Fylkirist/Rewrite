@@ -75,11 +75,28 @@ class Game {
 	}
  	async startBattle(type,opponent){
 		if(type == "trainer"){
-
+			let battleState = new Battle({
+				encounterType:"trainer",
+				enemy: opponent,
+				player: this.state.player,
+				state:this
+			})
+			this.cachedScene = this.state.currentScene
+			this.state.currentScene = battleState
 		}
 		else{
-
+			let battleState = new Battle({
+				encounterType:"wild",
+				enemy: {party:[await createNewPokemon(opponent.name,opponent.level,opponent.moves)], behaviour:"wild"},
+				player:this.state.player,
+				state:this
+			})
+			this.cachedScene = this.state.currentScene
+			this.state.currentScene = battleState
 		}
+	}
+	backToOverworld(){
+		this.state.currentScene = this.cachedScene
 	}
   }
   

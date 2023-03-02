@@ -433,19 +433,8 @@ class Overworld extends Scene{
 
 class Battle extends Scene{
     constructor(options){
-		super(options.player,{
-			"main": new Menu(2,[
-				{text:"Fight",action:() => this.createMenuInstance("fight",
-				{previous:"main", 
-				width:2, 
-				content:this.player.pokemon[0].moves.map(move => {
-					return {text:move.name, action:() => this.selectAction("move", move)}
-				})})},
-				{text:"Items",action:this.changeMenu("items")},
-				{text:"PKMN",action:this.changeMenu("party")},
-				{text:"Run",action:this.fleeBattle()}
-			],this.changeMenu("main"))
-		})
+		super(options.player)
+		this.state = options.state
 		this.turn = 0
 		this.encounterType = options.encounterType
         this.typeTable={
@@ -469,6 +458,19 @@ class Battle extends Scene{
             "fairy": {"normal": 1, "fire": 0.5, "water": 1, "electric": 1, "grass": 1, "ice": 1, "fighting": 2, "poison": 0.5, "ground": 1, "flying": 1, "psychic": 1, "bug": 1, "rock": 1, "ghost": 1, "dragon": 2, "dark": 2, "steel": 0.5, "fairy": 1,"none":1}
         }
 		this.enemy = options.enemy
+		this.menus = {
+			"main": new Menu(2,[
+				{text:"Fight",action:() => this.createMenuInstance("fight",
+				{previous:"main", 
+				width:2, 
+				content:this.player.party[0].moves.map(move => {
+					return {text:move.name, action:() => this.selectAction("move", move)}
+				}),previous:()=>this.changeMenu("main")})},
+				{text:"Items",action:()=>this.changeMenu("items")},
+				{text:"PKMN",action:()=>this.openPartyMenu()},
+				{text:"Run",action:() => this.fleeBattle()}
+			],this.changeMenu("main"))
+		}
     }
 	render(){
 		let backgroundGrid = document.createElement("div")
@@ -519,7 +521,7 @@ class Battle extends Scene{
 		name.textContent = pokemon.name
 
 		let level = document.createElement("label")
-		level.textContent = `lv.${this.player.party[0].level}`
+		level.textContent = `lv.${pokemon.level}`
 
 		let healthBarParent = document.createElement("div")
 		healthBarParent.className = "BattleHealthBarParent"
@@ -544,11 +546,21 @@ class Battle extends Scene{
 
 		return infoBox
 	}
+	handleInput(input){
+		this.menus[this.currentMenu].handleInput(input)
+	}
 	selectAction(type, action){
 		
 	}
 	handleBattleLogic(playerAction){
 
+	}
+	fleeBattle(){
+		this.state.backToOverworld()
+	}
+	openPartyMenu(){
+		this.menus["party"] = new FullScreenMenu(2,this.player.party,()=>this.changeMenu("main"))
+		this.changeMenu("party")
 	}
 }
 
