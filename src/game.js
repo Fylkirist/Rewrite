@@ -10,6 +10,7 @@ class Game {
 		this.saveSlot = window.localStorage.getItem("PKMN-SAVED-STATE")
 		this.runFlag = 1
 		this.animQueue = []
+		this.cachedScene;
     }
   
     start() {
@@ -72,8 +73,13 @@ class Game {
 		})
 		this.state.currentScene = new Overworld(this.state.player,this.state.mapStates.mapStates[this.state.currentMap],this)
 	}
-	startBattle(){
+ 	async startBattle(type,opponent){
+		if(type == "trainer"){
 
+		}
+		else{
+
+		}
 	}
   }
   
