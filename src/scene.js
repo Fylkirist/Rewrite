@@ -166,7 +166,7 @@ class FullScreenMenu extends Menu{
 					}
 					break
 				case "a":
-					this.subMenu = new Menu(1,[{text:"Switch",action:""},{text:"Summary",action:""},{text:"",action:""},{text:"",action:""}],(()=>{this.subMenu = false}))
+					this.subMenu = new Menu(1,[{text:"Switch",action:()=>this.content[this.pointer].action1(this.pointer)},{text:"Summary",action:()=>this.content[this.pointer].action2(this.pointer)}],(()=>{this.subMenu = false}))
 					break
 				case "s":
 					this.previous()
@@ -436,6 +436,7 @@ class Battle extends Scene{
 		super(options.player)
 		this.state = options.state
 		this.turn = 0
+		this.battleOrder = []
 		this.encounterType = options.encounterType
         this.typeTable={
             "normal": {"normal": 1, "fire": 1, "water": 1, "electric": 1, "grass": 1, "ice": 1, "fighting": 1, "poison": 1, "ground": 1, "flying": 1, "psychic": 1, "bug": 1, "rock": 0.5, "ghost": 0, "dragon": 1, "dark": 1, "steel": 0.5, "fairy": 1,"none":1},
@@ -559,8 +560,20 @@ class Battle extends Scene{
 		this.state.backToOverworld()
 	}
 	openPartyMenu(){
-		this.menus["party"] = new FullScreenMenu(2,this.player.party,()=>this.changeMenu("main"))
+		this.menus["party"] = new FullScreenMenu(2,this.player.party.map(item=>{
+			item.action1 = (i) => {this.switchPKMN(i)}
+			item.action2 = (i) => {this.openSummaryView(i)}
+			return item
+		}),()=>this.changeMenu("main"))
 		this.changeMenu("party")
+	}
+	switchPKMN(i){
+		this.selectAction("switch",i)
+		this.player.switchPKMN(i,0)
+		this.changeMenu("main")
+	}
+	openSummaryView(i){
+
 	}
 }
 

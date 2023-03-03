@@ -21,10 +21,16 @@ const itemDict = {
 		"name": "Potion",
 		"description": "Restores a Pokémon's HP by 20.",
 		"action": function(pokemon) {
-		  pokemon.currentHP += 20;
-		  if (pokemon.currentHP > pokemon.maxHP) {
-			pokemon.currentHP = pokemon.maxHP;
-		  }
+			if(pokemon.currentHP<pokemon.stats.hp){
+		  		pokemon.currentHP += 20;
+		  		if (pokemon.currentHP > pokemon.stats.hp) {
+					pokemon.currentHP = pokemon.stats.hp;
+		  		}
+				return [true,`${pokemon.name}'s hp was restored by 20`]
+			}
+			else{
+				return [false,`${pokemon.name} is already at full health`]
+			}
 		}
 	},
 	"pokeball":{

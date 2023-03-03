@@ -187,4 +187,9 @@ class Player extends Character{
 	useItem(item,target){
 		
 	}
+	switchPKMN(i,t){
+		let storage = this.party[i]
+		this.party[i] = this.party[t]
+		this.party[t] = storage
+	}
 }
