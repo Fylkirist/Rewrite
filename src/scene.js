@@ -426,7 +426,7 @@ class Overworld extends Scene{
 			this.player.items.map(elem => {
 
 			}),
-			this.changeMenu("party"))
+			()=>this.changeMenu("party"))
 	}
 }
 
