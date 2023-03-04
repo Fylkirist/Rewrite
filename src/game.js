@@ -11,6 +11,7 @@ class Game {
 		this.runFlag = 1
 		this.animQueue = []
 		this.cachedScene;
+		this.inputBuffer;
     }
   
     start() {
@@ -22,7 +23,7 @@ class Game {
 	initializeEventListener(){
 		document.addEventListener("keydown",(event) =>{
 			console.log(event)
-			this.state.currentScene.handleInput(event)
+			this.inputBuffer = event
 		})
 	}
   
@@ -30,6 +31,10 @@ class Game {
 		if(this.runFlag==1){
 
 			
+			if(this.inputBuffer){
+				this.state.currentScene.handleInput(this.inputBuffer)
+			}
+			this.inputBuffer = false
 			this.render();
 			
 			

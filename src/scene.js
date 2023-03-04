@@ -24,7 +24,11 @@ const tileDict = {
 	greenGrassTile: new Tile({
 		spriteX:63,
 		spriteY:72,
-		event:{chance:0.10,event:"battle"},
+		event:(map,scene)=>{
+			if(Math.random()>0.90){
+				scene.startWildEncounter(map.encounters[Math.floor(Math.random()*map.encounters.length)])
+			}
+		},
 	  	collision:false,
 		type:"none"
 		}
@@ -238,7 +242,7 @@ class MapStateCollection{
 				[tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile],
 				[tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile,tileDict.greenGrassTile]
 			],encounters:[
-				createNewPokemon("bulbasaur",10,[]),createNewPokemon("charmander",10,[])
+				{name:"bulbasaur",level:10,moves:["vine-whip","tackle","absorb","solar-beam"]},{name:"charizard",level:25,moves:["flamethrower","fly","solar-beam","aerial-ace"]}
 			],characters:[
 				new Character({name:"bruh",
 				posX:1,
@@ -309,6 +313,8 @@ class Overworld extends Scene{
 		this.characters = map.characters
 		this.mapGrid = map.grid
 		this.encounters = map.encounters
+		this.map = map
+		this.state = state
 		this.menus = {
 			"start": new Menu(1,[
 				{text:"Save game",action:()=>{state.saveGame()}},
@@ -380,6 +386,9 @@ class Overworld extends Scene{
 				case "ArrowRight":
 				case "ArrowLeft":
 					this.handleMove(dirDict[input.key], this.player)
+					if(this.mapGrid[this.player.posY][this.player.posX].event!==false){
+						this.mapGrid[this.player.posY][this.player.posX].event(this.map,this)
+					}
 					break
 				case "x":
 					this.changeMenu("start")
@@ -428,6 +437,9 @@ class Overworld extends Scene{
 			}),
 			()=>this.changeMenu("party"))
 	}
+	startWildEncounter(encounter){
+		this.state.startBattle("wild",encounter)
+	}
 }
 
 
@@ -436,7 +448,7 @@ class Battle extends Scene{
 		super(options.player)
 		this.state = options.state
 		this.turn = 0
-		this.battleOrder = []
+		this.battleSequence = []
 		this.encounterType = options.encounterType
         this.typeTable={
             "normal": {"normal": 1, "fire": 1, "water": 1, "electric": 1, "grass": 1, "ice": 1, "fighting": 1, "poison": 1, "ground": 1, "flying": 1, "psychic": 1, "bug": 1, "rock": 0.5, "ghost": 0, "dragon": 1, "dark": 1, "steel": 0.5, "fairy": 1,"none":1},
@@ -512,6 +524,34 @@ class Battle extends Scene{
 		let dynamicMenu = this.menus[this.currentMenu].render()
 		dynamicMenu.id = `battle${this.currentMenu}menu`
 		backgroundGrid.appendChild(dynamicMenu)
+
+		if(this.currentMenu == "fight"){
+			let moveInfoBox = document.createElement("div")
+			moveInfoBox.id = "battleMoveInfoBox"
+
+			let moveType = document.createElement("div")
+			moveType.textContent = "Type: " + this.player.party[0].moves[this.menus[this.currentMenu].pointer].type.name
+
+			let movePP = document.createElement("div")
+			movePP.textContent = "PP: " + this.player.party[0].moves[this.menus[this.currentMenu].pointer].pp
+
+			let damageType = document.createElement("div")
+			damageType.textContent = this.player.party[0].moves[this.menus[this.currentMenu].pointer].damage_class.name
+
+			let movePower = document.createElement("div")
+			movePower.textContent = "Power: " + this.player.party[0].moves[this.menus[this.currentMenu].pointer].power
+
+			let moveAccuracy = document.createElement("div")
+			moveAccuracy.textContent = "Accuracy: " + this.player.party[0].moves[this.menus[this.currentMenu].pointer].accuracy
+
+			moveInfoBox.appendChild(moveType)
+			moveInfoBox.appendChild(movePP)
+			moveInfoBox.appendChild(damageType)
+			moveInfoBox.appendChild(moveAccuracy)
+			moveInfoBox.appendChild(movePower)
+			
+			dynamicMenu.appendChild(moveInfoBox)
+		}
 		return backgroundGrid
 	}
 	renderInfoBox(pokemon){
