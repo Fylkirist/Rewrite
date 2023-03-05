@@ -43,7 +43,7 @@ class Pokemon {
       	})();
       	this.types = data.types.map(type => type.type.name);
 		if(this.types.length<2){
-			this.type.push("none")
+			this.types.push("none")
 		}
       	this.ability = data.abilities[Math.floor(Math.random()*data.abilities.length)]
       	this.experience = 0;
