@@ -42,6 +42,9 @@ class Pokemon {
         	return emptyObj
       	})();
       	this.types = data.types.map(type => type.type.name);
+		if(this.types.length<2){
+			this.type.push("none")
+		}
       	this.ability = data.abilities[Math.floor(Math.random()*data.abilities.length)]
       	this.experience = 0;
       	this.EVs = {
@@ -176,8 +179,8 @@ class Player extends Character{
 			name:options.name
 		})
       	this.gender = options.gender
-      	this.money = 0
-      	this.items = []
+      	this.money = options.money
+      	this.items = options.items
     }
 	render(params){
 		if(params.situation == "overworld"){

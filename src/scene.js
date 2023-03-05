@@ -135,6 +135,7 @@ class FullScreenMenu extends Menu{
 			menuElem.appendChild(elemLevel)
 			menuElem.appendChild(elemHealthLabel)
 			menuElem.appendChild(elemHealthBarParent)
+
 			menuContainer.appendChild(menuElem)
 		}
 		if(this.subMenu){
@@ -549,7 +550,7 @@ class Battle extends Scene{
 			moveInfoBox.appendChild(damageType)
 			moveInfoBox.appendChild(moveAccuracy)
 			moveInfoBox.appendChild(movePower)
-			
+
 			dynamicMenu.appendChild(moveInfoBox)
 		}
 		return backgroundGrid
@@ -579,11 +580,16 @@ class Battle extends Scene{
 		else if(pokemon.gender === "female"){
 			gender.textContent = "♀"
 		}
+		let status = document.createElement("label")
+		if(pokemon.status != "none"){
+			status.textContent = pokemon.status
+		}
 		
 		infoBox.appendChild(name)
 		infoBox.appendChild(gender)
 		infoBox.appendChild(level)
 		infoBox.appendChild(healthBarParent)
+		infoBox.appendChild(status)
 
 		return infoBox
 	}
@@ -592,9 +598,6 @@ class Battle extends Scene{
 	}
 	selectAction(type, action){
 		
-	}
-	handleBattleLogic(playerAction){
-
 	}
 	fleeBattle(){
 		this.state.backToOverworld()
@@ -614,6 +617,69 @@ class Battle extends Scene{
 	}
 	openSummaryView(i){
 
+	}
+	handleBattleLogic(playerAction){
+		let enemyAction  = determineEnemyAction()
+
+		if(playerAction.type == "switch"){
+
+		}
+		if(enemyAction.type == "switch"){
+
+		}
+		if(playerAction.type == "item"){
+
+		}
+		if(enemyAction.type == "item"){
+			
+		}
+		if(playerAction.type == "move"){
+
+		}
+		if(enemyAction.type == "move"){
+			
+		}
+	}
+	useMove(user, target, move) {
+		let modifier = this.calculateModifier(user, target, move);
+		let attack = (move.damage_class.name == "physical")?user.stats.attack:user.stats.specialAttack
+		let defense = (move.damage_class.name == "physical")?user.stats.defense:user.stats.specialDefense
+		let damage = Math.floor(
+		  (
+			(
+			  (
+				2 * user.stats.level / 5 + 2
+			  ) * move.power * attack / defense
+			) / 50 + 2
+		  ) * modifier.mod
+		);
+		target.currentHP -= damage;
+		move.pp--
+	}
+	calculateModifier(user, target, move) {
+		let events = [];
+		let effectiveness = this.typeTable[move.type.name][target.type[0]]*this.typeTable[move.type.name][target.type[1]];
+		if (effectiveness > 1){
+			events.push("Super effective")
+		}
+		else if (effectiveness<1){
+			events.push("Not very effective")
+		}
+		let critical;
+		if(move.meta.crit_rate>0){
+			critical = ((8*user.baseStats.speed/2)>Math.random()*256)? 2 : 1	
+		}
+		else{
+			critical = ((user.baseStats.speed/2)>Math.random()*256)? 2 : 1
+		}
+		if (critical>1){
+			events.push("Critical hit")
+		}
+		let random = Math.random() * 0.15 + 0.85;
+		let STAB = (user.types.includes(move.type.name))? 1.5:1.0;
+		let modifier = effectiveness * critical * random * STAB;
+		
+		return {mod:modifier,event:events}
 	}
 }
 

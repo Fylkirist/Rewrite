@@ -74,7 +74,9 @@ class Game {
 			posX:0,
 			flags:{},
 			facing:"south",
-			reward:0
+			reward:0,
+			money:0,
+			items:[]
 		})
 		this.state.currentScene = new Overworld(this.state.player,this.state.mapStates.mapStates[this.state.currentMap],this)
 	}
