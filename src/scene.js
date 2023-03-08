@@ -483,7 +483,7 @@ class Battle extends Scene{
 				{text:"Items",action:()=>this.changeMenu("items")},
 				{text:"PKMN",action:()=>this.openPartyMenu()},
 				{text:"Run",action:() => this.fleeBattle()}
-			],this.changeMenu("main"))
+			],()=>this.changeMenu("main"))
 		}
     }
 	render(){
@@ -622,23 +622,26 @@ class Battle extends Scene{
 		let enemyAction  = determineEnemyAction()
 
 		if(playerAction.type == "switch"){
-
+			this.battleSequence.push(playerAction)
 		}
 		if(enemyAction.type == "switch"){
-
+			this.battleSequence.push(enemyAction)
 		}
 		if(playerAction.type == "item"){
-
+			this.battleSequence.push(playerAction)
 		}
 		if(enemyAction.type == "item"){
+			this.battleSequence.push(enemyAction)
+		}
+		if(playerAction.type == "move" && enemyAction.type == "move"){
 			
 		}
-		if(playerAction.type == "move"){
+		/*if(playerAction.type == "move"){
 
 		}
 		if(enemyAction.type == "move"){
 			
-		}
+		}*/
 	}
 	useMove(user, target, move) {
 		let modifier = this.calculateModifier(user, target, move);
@@ -749,7 +752,7 @@ class NewCharScreen{
 			{text:"♂",action:()=>{this.gender="male"}},
 			{text:"♀",action:()=>{this.gender="female"}},
 			{text:"back",action:()=>{state.start()}}
-		])
+		],()=>{this.name.pop()})
 		
 	}
 	render(){

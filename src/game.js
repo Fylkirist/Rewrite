@@ -42,7 +42,7 @@ class Game {
 		}
     }
 
-    render() {
+    render(){
       	app.innerHTML=""
 		app.appendChild(this.state.currentScene.render())
     }
