@@ -89,6 +89,70 @@ class Menu{
 	}
 }
 
+class ItemMenu extends Menu{
+	constructor(content,previous){
+		super(1,content,previous)
+		this.subMenu = false
+	}
+	render(){
+		let menuContainer = document.createElement("div")
+		menuContainer.id = "itemMenuContainer"
+
+		let itemSpriteContainer = document.createElement("canvas")
+		itemSpriteContainer.id = "itemMenuSprite"
+
+		let ctx = itemSpriteContainer.getContext("2d")
+		//ctx.drawImage(itemSpriteSheet)
+
+		for(let i = 0; i<this.content.length; i++){
+			let menuElement = document.createElement("div")
+			menuElement.className = "itemMenuElement"
+
+			if(i == this.pointer){
+				menuElement.classList.add("itemSelectedMenuElement")
+			}
+			menuContainer.appendChild(menuElement)
+		}
+		menuContainer.appendChild(itemSpriteContainer)
+		return menuContainer
+	}
+	handleInput(input){
+		if(this.subMenu){
+			this.subMenu.handleInput(input)
+		}
+		else{
+			switch(input){
+				case "ArrowLeft":
+					if(this.pointer>0){
+						this.pointer--
+					}
+					break
+				case "ArrowRight":
+					if(this.pointer<this.content.length-1){
+						this.pointer++
+					}
+					break
+				case "ArrowUp":
+					if(this.pointer-this.width>=0){
+						this.pointer-=this.width
+					}
+					break
+				case "ArrowDown":
+					if(this.pointer+this.width<this.content.length){
+						this.pointer+=this.width
+					}
+					break
+				case "a":
+					this.subMenu = new Menu(1,[{text:"Use",action:()=>this.content[this.pointer].action1(this.pointer)},{text:"Drop",action:()=>this.content[this.pointer].action2(this.pointer)}],(()=>{this.subMenu = false}))
+					break
+				case "s":
+					this.previous()
+					break
+			}
+		}
+	}
+}
+
 class FullScreenMenu extends Menu{
 	constructor(width, content, previous){
 		super(width,content,previous)
@@ -601,6 +665,14 @@ class Battle extends Scene{
 	}
 	fleeBattle(){
 		this.state.backToOverworld()
+	}
+	openItemMenu(){
+		this.menus["items"] = new ItemMenu(2,this.player.items.map(item=>{
+			item.action1 = (i) => {this.useItem(i)}
+			item.action2 = (i) => {this.dropItem(i)}
+			return item
+		}),()=>this.changeMenu("main"))
+		this.changeMenu("items")
 	}
 	openPartyMenu(){
 		this.menus["party"] = new FullScreenMenu(2,this.player.party.map(item=>{

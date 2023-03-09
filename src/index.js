@@ -16,6 +16,9 @@ const playerSprites = {
 playerSprites.male.src = "../assets/maleTestOverworldSprite.png"
 playerSprites.female.src = "../assets/femaleTestOverworldSprite.png"
 
+const itemSpriteSheet = new Image()
+itemSpriteSheet.src = "../assets/items.png"
+
 const itemDict = {
 	"potion":{
 		"name": "Potion",

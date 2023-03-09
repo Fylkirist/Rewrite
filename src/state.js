@@ -114,14 +114,6 @@ class Pokemon {
 			return pokeSprite
 		}
 	}
-	useMove(move,context){
-		if(typeof context ==="object"){
-
-		}
-		else{
-
-		}
-	}
 	
 	learnMove(move){
 
