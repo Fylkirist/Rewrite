@@ -76,7 +76,7 @@ class Game {
 			facing:"south",
 			reward:0,
 			money:0,
-			items:[]
+			items:[{name:"Potion",sprite:{x:100,y:100},quantity:99}]
 		})
 		this.state.currentScene = new Overworld(this.state.player,this.state.mapStates.mapStates[this.state.currentMap],this)
 	}

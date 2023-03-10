@@ -99,3 +99,44 @@
     width: 800px;
     position: absolute;
 }
+
+.itemSelectedMenuElement{
+    border: solid black 2px;
+}
+
+#battleitemsmenu{
+    height: 800px;
+    width: 800px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: white;
+}
+
+#itemMenuContainer{
+    display: grid;
+}
+
+#itemMenuSprite{
+    border: inset 3px;
+}
+
+#itemMenuElement{
+    width: 100px;
+    text-align: center;
+    padding: 3px;
+}
+
+.itemMenuItemLabel{
+    margin: 5px;
+}
+
+.itemMenuItemQuantity{
+    margin: 5px;
+    margin-left: 20px;
+}
+
+#itemMenuListContainer{
+    width: 200px;
+    border: solid black 2px;
+}

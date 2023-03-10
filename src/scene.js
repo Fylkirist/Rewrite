@@ -12,6 +12,14 @@ class Tile{
 		context.drawImage(tileSheet,this.spriteCut.x,this.spriteCut.y,16,16,coords.x,coords.y,16,16)
 	}
 }
+const weatherDict = {
+	"sunnyDay":{
+		elementUp:"fire",
+		elementDown:"water",
+		maxDuration:4
+	}
+}
+
 const tileDict = {
 	greenTile: new Tile({
 		spriteX:111,
@@ -90,9 +98,11 @@ class Menu{
 }
 
 class ItemMenu extends Menu{
-	constructor(content,previous){
+	constructor(content,previous,action1,action2){
 		super(1,content,previous)
 		this.subMenu = false
+		this.action1 = action1
+		this.action2 = action2
 	}
 	render(){
 		let menuContainer = document.createElement("div")
@@ -100,28 +110,48 @@ class ItemMenu extends Menu{
 
 		let itemSpriteContainer = document.createElement("canvas")
 		itemSpriteContainer.id = "itemMenuSprite"
+		itemSpriteContainer.width = 50
+		itemSpriteContainer.height = 50
+
+		let itemList = document.createElement("div")
+		itemList.id = "itemMenuListContainer"
 
 		let ctx = itemSpriteContainer.getContext("2d")
-		//ctx.drawImage(itemSpriteSheet)
+		ctx.drawImage(itemSpriteSheet,this.content[this.pointer].sprite.x,this.content[this.pointer].sprite.y,29,32,0,0,50,50)
 
+		if(this.subMenu){
+			menuContainer.appendChild(this.subMenu.render())
+		}
+		
 		for(let i = 0; i<this.content.length; i++){
 			let menuElement = document.createElement("div")
 			menuElement.className = "itemMenuElement"
 
+			let itemLabel = document.createElement("label")
+			itemLabel.textContent = this.content[i].name
+			itemLabel.className = "itemMenuItemLabel"
+
+			let itemQuantity = document.createElement("label")
+			itemQuantity.textContent = "x" + this.content[i].quantity
+			itemQuantity.className = "itemMenuItemQuantity"
+
 			if(i == this.pointer){
 				menuElement.classList.add("itemSelectedMenuElement")
 			}
-			menuContainer.appendChild(menuElement)
+			menuElement.appendChild(itemLabel)
+			menuElement.appendChild(itemQuantity)
+			itemList.appendChild(menuElement)
 		}
+		menuContainer.appendChild(itemList)
 		menuContainer.appendChild(itemSpriteContainer)
 		return menuContainer
 	}
 	handleInput(input){
-		if(this.subMenu){
+		if(this.subMenu!=false){
 			this.subMenu.handleInput(input)
 		}
 		else{
-			switch(input){
+			switch(input.key){
 				case "ArrowLeft":
 					if(this.pointer>0){
 						this.pointer--
@@ -143,7 +173,7 @@ class ItemMenu extends Menu{
 					}
 					break
 				case "a":
-					this.subMenu = new Menu(1,[{text:"Use",action:()=>this.content[this.pointer].action1(this.pointer)},{text:"Drop",action:()=>this.content[this.pointer].action2(this.pointer)}],(()=>{this.subMenu = false}))
+					this.subMenu = new Menu(1,[{text:"Use",action:()=>this.action1(this.pointer)},{text:"Drop",action:()=>this.action2(this.pointer)}],(()=>{this.subMenu = false}))
 					break
 				case "s":
 					this.previous()
@@ -496,11 +526,12 @@ class Overworld extends Scene{
 		this.changeMenu("party")
 	}
 	openBagMenu(){
-		this.menus["bag"] = new Menu(1,
-			this.player.items.map(elem => {
-
-			}),
-			()=>this.changeMenu("party"))
+		this.menus["bag"] = new ItemMenu(
+			this.player.items,
+			()=>this.changeMenu("party"),
+			(i)=>this.useItem(i),
+			(i)=>this.dropItem(i)
+			)
 	}
 	startWildEncounter(encounter){
 		this.state.startBattle("wild",encounter)
@@ -544,10 +575,17 @@ class Battle extends Scene{
 				content:this.player.party[0].moves.map(move => {
 					return {text:move.name, action:() => this.selectAction("move", move)}
 				}),previous:()=>this.changeMenu("main")})},
-				{text:"Items",action:()=>this.changeMenu("items")},
+				{text:"Items",action:()=>this.openItemMenu()},
 				{text:"PKMN",action:()=>this.openPartyMenu()},
 				{text:"Run",action:() => this.fleeBattle()}
 			],()=>this.changeMenu("main"))
+		}
+		this.flags = {
+			weather:false,
+			"enemyReflect":false,
+			"playerReflect":false,
+			"enemyBarrier":false,
+			"playerBarrier":false
 		}
     }
 	render(){
@@ -667,11 +705,10 @@ class Battle extends Scene{
 		this.state.backToOverworld()
 	}
 	openItemMenu(){
-		this.menus["items"] = new ItemMenu(2,this.player.items.map(item=>{
-			item.action1 = (i) => {this.useItem(i)}
-			item.action2 = (i) => {this.dropItem(i)}
-			return item
-		}),()=>this.changeMenu("main"))
+		this.menus["items"] = new ItemMenu(this.player.items,
+			()=>this.changeMenu("main"),
+			(i)=>{this.useItem(i)},
+			(i)=>{this.dropItem(i)})
 		this.changeMenu("items")
 	}
 	openPartyMenu(){
@@ -690,7 +727,10 @@ class Battle extends Scene{
 	openSummaryView(i){
 
 	}
-	handleBattleLogic(playerAction){
+	useItem(index){
+
+	}
+	setTurnSequence(playerAction){
 		let enemyAction  = determineEnemyAction()
 
 		if(playerAction.type == "switch"){
@@ -706,14 +746,29 @@ class Battle extends Scene{
 			this.battleSequence.push(enemyAction)
 		}
 		if(playerAction.type == "move" && enemyAction.type == "move"){
+			if(playerAction.action.priority > enemyAction.action.priority ||
+				playerAction.action.priority == enemyAction.action.priority && this.player.party[0].stats.speed > this.enemy.party[0].stats.speed)
+				{
+					this.battleSequence.push(playerAction)
+					this.battleSequence.push(enemyAction)
+			}
+			else{
+				this.battleSequence.push(enemyAction)
+				this.battleSequence.push(playerAction)
+			}
+		}
+		else if(playerAction.type == "move"){
+			this.battleSequence.push(playerAction)
+		}
+		else if(enemyAction.type == "move"){
+			this.battleSequence.push(enemyAction)
+		}
+		this.resolveTurn(this.battleSequence)
+	}
+	resolveTurn(sequence){
+		for(let i = 0; i<sequence.length; i++){
 			
 		}
-		/*if(playerAction.type == "move"){
-
-		}
-		if(enemyAction.type == "move"){
-			
-		}*/
 	}
 	useMove(user, target, move) {
 		let modifier = this.calculateModifier(user, target, move);
@@ -753,6 +808,15 @@ class Battle extends Scene{
 		let random = Math.random() * 0.15 + 0.85;
 		let STAB = (user.types.includes(move.type.name))? 1.5:1.0;
 		let modifier = effectiveness * critical * random * STAB;
+
+		if(this.flags.weather){
+			if(weatherDict[this.flags.weather].elementUp == move.type.name){
+				modifier *= 2
+			}
+			else if(weatherDict[this.flags.weather].elementDown == move.type.name){
+				modifier *= 0.5
+			}
+		}
 		
 		return {mod:modifier,event:events}
 	}
