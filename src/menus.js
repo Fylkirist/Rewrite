@@ -259,3 +259,10 @@ class Dialogue{
 		
 	}
 }
+
+class SummaryView extends Menu{
+	constructor(){
+		super(4)
+
+	}
+}
