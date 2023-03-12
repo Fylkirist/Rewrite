@@ -3,21 +3,21 @@ const app = document.getElementById("app")
 const P = new Pokedex.Pokedex()
 
 const tileSheet = new Image()
-tileSheet.src = "../assets/testTileSprites.png"
+tileSheet.src = "assets/testTileSprites.png"
 
 const charSprites = new Image()
-charSprites.src = "../assets/testCharSprites.png"
+charSprites.src = "assets/testCharSprites.png"
 
 const playerSprites = {
 	"male":new Image(),
 	"female":new Image()
 }
 
-playerSprites.male.src = "../assets/maleTestOverworldSprite.png"
-playerSprites.female.src = "../assets/femaleTestOverworldSprite.png"
+playerSprites.male.src = "assets/maleTestOverworldSprite.png"
+playerSprites.female.src = "assets/femaleTestOverworldSprite.png"
 
 const itemSpriteSheet = new Image()
-itemSpriteSheet.src = "../assets/items.png"
+itemSpriteSheet.src = "assets/items.png"
 
 const itemDict = {
 	"potion":{

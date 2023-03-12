@@ -36,7 +36,7 @@ class TitleScreen extends Scene{
 
 		let backgroundImg = document.createElement("img")
 		backgroundImg.id = "titleScreenBackground"
-		backgroundImg.src = "../assets/GoldTitle.png"
+		backgroundImg.src = "assets/GoldTitle.png"
 		titleContainer.appendChild(backgroundImg)
 
 		let menu = this.menus[this.currentMenu].render()
@@ -347,7 +347,21 @@ class Battle extends Scene{
 		this.menus[this.currentMenu].handleInput(input)
 	}
 	selectAction(type, action){
-		
+		this.changeMenu("main")
+		switch(type){
+			case "move":
+				if(action.pp < 1){
+					console.log("not enough pp")
+					return
+				}
+				break
+			case "switch":
+				break
+			case "item":
+				break
+			case "flee":
+				break
+		}
 	}
 	fleeBattle(){
 		this.state.backToOverworld()
@@ -355,7 +369,7 @@ class Battle extends Scene{
 	openItemMenu(){
 		this.menus["items"] = new ItemMenu(this.player.items,
 			()=>this.changeMenu("main"),
-			(i)=>{this.useItem(i)},
+			(i)=>{this.selectAction("item",this.player.items[i])},
 			(i)=>{this.dropItem(i)})
 		this.changeMenu("items")
 	}
@@ -373,9 +387,6 @@ class Battle extends Scene{
 		this.changeMenu("main")
 	}
 	openSummaryView(i){
-
-	}
-	useItem(index){
 
 	}
 	setTurnSequence(playerAction){
@@ -415,7 +426,14 @@ class Battle extends Scene{
 	}
 	resolveTurn(sequence){
 		for(let i = 0; i<sequence.length; i++){
-			
+			switch(sequence[i].type){
+				case "switch":
+					break
+				case "item":
+					break
+				case "move":
+					break
+			}
 		}
 	}
 	useMove(user, target, move) {
@@ -548,10 +566,10 @@ class NewCharScreen{
 
 		let playerSprite = document.createElement("img")
 		if(this.gender==="male"){
-			playerSprite.src = "../assets/maleTestSprite.png"
+			playerSprite.src = "assets/maleTestSprite.png"
 		}
 		else{
-			playerSprite.src = "../assets/femaleTestSprite.png"
+			playerSprite.src = "assets/femaleTestSprite.png"
 		}
 		newCharInfoContainer.appendChild(playerSprite)
 		let nameContainer =  document.createElement("div")
