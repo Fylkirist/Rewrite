@@ -233,7 +233,9 @@ class Battle extends Scene{
 			"enemyReflect":false,
 			"playerReflect":false,
 			"enemyBarrier":false,
-			"playerBarrier":false
+			"playerBarrier":false,
+			"playerMoveDisabled":false,
+			"enemyMoveDisabled":false
 		}
     }
 	render(){
@@ -354,6 +356,13 @@ class Battle extends Scene{
 					console.log("not enough pp")
 					return
 				}
+				else if(this.flags.playerMoveDisabled==action.name){
+					console.log(`${action.name} is disabled!`)
+					return
+				}
+				else{
+					this.setTurnSequence({type:type, action:action})
+				}
 				break
 			case "switch":
 				break
@@ -390,7 +399,7 @@ class Battle extends Scene{
 
 	}
 	setTurnSequence(playerAction){
-		let enemyAction  = determineEnemyAction()
+		let enemyAction  = this.determineEnemyAction()
 
 		if(playerAction.type == "switch"){
 			this.battleSequence.push(playerAction)
@@ -428,10 +437,14 @@ class Battle extends Scene{
 		for(let i = 0; i<sequence.length; i++){
 			switch(sequence[i].type){
 				case "switch":
+					sequence[i].actor.switchPKMN(sequence[i].action)
+					console.log(`${sequence[i].actor.name} has switched in ${sequence[i].actor.party[0]}`)
 					break
 				case "item":
+					
 					break
 				case "move":
+					this.useMove(sequence[i].actor.party[0])
 					break
 			}
 		}

@@ -261,8 +261,231 @@ class Dialogue{
 }
 
 class SummaryView extends Menu{
-	constructor(){
-		super(4)
+	constructor(previous, content, selected){
+		super(4,content,previous)
+		this.pPointer = selected
+	}
+	render(){
+		let container = document.createElement("div")
 
+		let leftContainer = document.createElement("div")
+		leftContainer.id = "summaryViewLeftContainer"
+
+		let spriteContainer = this.content[this.pPointer].render("facing")
+		spriteContainer.id = "summaryViewSprite"
+		leftContainer.appendChild(spriteContainer)
+
+		let levelLabel = document.createElement("label")
+		levelLabel.textContent = "lvl. " + this.content[this.pPointer].level
+		levelLabel.id = "summaryViewLevelLabel"
+		leftContainer.appendChild(levelLabel)
+
+		let genderLabel = document.createElement("label")
+		genderLabel.id = "summaryViewGender"
+		if(this.content[this.pPointer].gender == "male"){
+			genderLabel.textContent = "♂"
+			genderLabel.style.color = "blue"
+		}
+		else if(this.content[this.pPointer].gender == "female"){
+			genderLabel.textContent = "♀"
+			genderLabel.style.color = "pink"
+		}
+
+		leftContainer.appendChild(genderLabel)
+		container.appendChild(leftContainer)
+
+		let menuIndicatorContainer = document.createElement("div")
+		menuIndicatorContainer.id = "summaryMenuIndicatorContainer"
+
+		let elem1 = document.createElement("div")
+		elem1.textContent = "PKMN"
+		elem1.className = "summaryMenuIndicator"
+
+		let elem2 = document.createElement("div")
+		elem2.textContent = "Stats"
+		elem2.className = "summaryMenuIndicator"
+
+		let elem3 = document.createElement("div")
+		elem3.textContent = "Moves"
+		elem3.className = "summaryMenuIndicator"
+
+		let elem4 = document.createElement("div")
+		elem4.textContent = "Description"
+		elem4.className = "summaryMenuIndicator"
+
+		menuIndicatorContainer.appendChild(elem1)
+		menuIndicatorContainer.appendChild(elem2)
+		menuIndicatorContainer.appendChild(elem3)
+		menuIndicatorContainer.appendChild(elem4)
+
+		container.appendChild(menuIndicatorContainer)
+
+		let summaryContainer = document.createElement("div")
+		summaryContainer.id = "summaryViewInfoContainer"
+
+		switch(this.pointer){
+			case 0:
+				let typesContainer = document.createElement("div")
+				typesContainer.id = "summaryViewTypeContainer"
+
+				let type1 = document.createElement("label")
+				type1.id = "summaryViewType1"
+				type1.textContent = this.content[this.pPointer].types[0]
+				typesContainer.appendChild(type1)
+				
+				if(this.content[this.pPointer].types.length>1){
+					let type2 = document.createElement("label")
+					type2.textContent = this.content[this.pPointer].types[1]
+					type2.id = "summaryViewType2"
+					typesContainer.appendChild(type2)
+				}
+
+				let abilityContainer = document.createElement("div")
+				abilityContainer.id = "summaryViewAbilityContainer"
+				abilityContainer.textContent = this.content[this.pPointer].ability.name
+
+				let natureContainer = document.createElement("div")
+				natureContainer.id = "summaryViewNatureContainer"
+				natureContainer.textContent = this.content[this.pPointer].nature
+
+				summaryContainer.appendChild(typesContainer)
+				summaryContainer.appendChild(abilityContainer)
+				summaryContainer.appendChild(natureContainer)
+
+				elem1.classList.add("summaryMenuSelectedIndicator")
+				break
+
+			case 1:
+				let summaryStatsTitle = document.createElement("div")
+				summaryStatsTitle.textContent = "Stats"
+				summaryStatsTitle.id = "summaryViewStatTitle"
+
+				summaryContainer.appendChild(summaryStatsTitle)
+				
+				let statsContainer = document.createElement("div")
+				statsContainer.id = "summaryViewStatContainer"
+
+				let hpElem = document.createElement("div")
+				hpElem.textContent = "hp: " + this.content[this.pPointer].stats.hp
+				hpElem.id = "summaryViewHp"
+
+				let	attackElem = document.createElement("div")
+				attackElem.textContent = "att: " + this.content[this.pPointer].stats.attack
+				attackElem.id = "summaryViewAttack"
+
+				let spAttackElem = document.createElement("div")
+				spAttackElem.textContent = "sp.att: " + this.content[this.pPointer].stats.specialAttack
+				spAttackElem.id = "summaryViewSpecialAttack"
+
+				let defenseElem = document.createElement("div")
+				defenseElem.textContent = "def: " + this.content[this.pPointer].stats.defense
+				defenseElem.id = "summaryViewDefense"
+
+				let spDefenseElem = document.createElement("div")
+				spDefenseElem.textContent = "sp.def: " + this.content[this.pPointer].stats.specialDefense
+				spDefenseElem.id = "summaryViewSpecialDefense"
+
+				let speedElem = document.createElement("div")
+				speedElem.textContent = "speed: " + this.content[this.pPointer].stats.speed
+				speedElem.id = "summaryViewSpeed"
+
+				statsContainer.appendChild(hpElem)
+				statsContainer.appendChild(attackElem)
+				statsContainer.appendChild(spAttackElem)
+				statsContainer.appendChild(defenseElem)
+				statsContainer.appendChild(spDefenseElem)
+				statsContainer.appendChild(speedElem)
+
+				summaryContainer.appendChild(statsContainer)
+
+				elem2.classList.add("summaryMenuSelectedIndicator")
+				break
+
+			case 2:
+				let titleContainer = document.createElement("div")
+				titleContainer.id = "summaryViewTitle"
+				titleContainer.textContent = "Moves"
+
+				let moveContainer = document.createElement("div")
+				moveContainer.id = "summaryViewMoveContainer"
+				
+				for(let i = 0; i<this.content[this.pPointer].moves.length; i++){
+					let moveElem = document.createElement("div")
+					moveElem.className = "summaryViewMoveElement"
+
+					let moveTypeLabel = document.createElement("label")
+					moveTypeLabel.textContent = this.content[this.pPointer].moves[i].type
+					moveTypeLabel.className = "summaryViewMoveType"
+
+					let moveNameLabel = document.createElement("label")
+					moveNameLabel.textContent = this.content[this.pPointer].moves[i].name
+					moveNameLabel.className = "summaryViewMoveName"
+
+					let movePPLabel = document.createElement("label")
+					movePPLabel.textContent = this.content[this.pPointer].moves[i].pp
+					movePPLabel.className = "summaryViewMovePP"
+
+					moveElem.appendChild(moveTypeLabel)
+					moveElem.appendChild(moveNameLabel)
+					moveElem.appendChild(movePPLabel)
+
+					moveContainer.appendChild(moveElem)
+				}
+				
+				summaryContainer.appendChild(titleContainer)
+				summaryContainer.appendChild(moveContainer)
+
+				elem3.classList.add("summaryMenuSelectedIndicator")
+				break
+
+			case 3:
+				let descriptionTitleContainer = document.createElement("div")
+				descriptionTitleContainer.id = "summaryViewDescriptionTitle"
+				descriptionTitleContainer.textContent = "Species description"
+
+				let descriptionBox = document.createElement("div")
+				descriptionBox.id = "summaryViewDecriptionContainer"
+
+				let descriptionHeader = document.createElement("h4")
+				descriptionHeader.id = "summaryViewDescriptionHeader"
+				descriptionHeader.textContent = this.content[this.pPointer].name
+
+				let description = document.createElement("p")
+				description.id = "summaryViewDescription"
+				description.textContent = this.content[this.pPointer].speciesData.flavor_text_entries[0].flavor_text
+
+				elem4.classList.add("summaryMenuSelectedIndicator")
+				break
+		}
+		container.appendChild(summaryContainer)
+		return container
+	}
+	handleInput(input){
+		switch(input.key){
+			case "ArrowLeft":
+				if(this.pointer>0){
+					this.pointer--
+				}
+				break
+			case "ArrowRight":
+				if(this.pointer<3){
+					this.pointer++
+				}
+				break
+			case "ArrowUp":
+				if(this.pPointer>0){
+					this.pPointer--
+				}
+				break
+			case "ArrowDown":
+				if(this.pPointer+1<this.content.length){
+					this.pPointer++
+				}
+				break
+			case "s":
+			case "S":
+				this.previous()
+				break
+		}
 	}
 }
