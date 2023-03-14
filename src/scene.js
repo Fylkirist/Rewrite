@@ -365,8 +365,16 @@ class Battle extends Scene{
 				}
 				break
 			case "switch":
+				if(this.enemy.party[0].ability.ability.name!="shadow-tag" && !this.flags.playerSwitchPrevented){
+					this.setTurnSequence({type:type, action:action})
+				}
+				else{
+					console.log("You cannot switch")
+					return
+				}
 				break
 			case "item":
+				
 				break
 			case "flee":
 				break
@@ -396,7 +404,8 @@ class Battle extends Scene{
 		this.changeMenu("main")
 	}
 	openSummaryView(i){
-
+		this.menus["summary"] = new SummaryView(()=>{this.changeMenu("party")},this.player.party,i)
+		this.changeMenu("summary")
 	}
 	setTurnSequence(playerAction){
 		let enemyAction  = this.determineEnemyAction()

@@ -282,11 +282,11 @@ class SummaryView extends Menu{
 
 		let genderLabel = document.createElement("label")
 		genderLabel.id = "summaryViewGender"
-		if(this.content[this.pPointer].gender == "male"){
+		if(this.content[this.pPointer].gender == "Male"){
 			genderLabel.textContent = "♂"
 			genderLabel.style.color = "blue"
 		}
-		else if(this.content[this.pPointer].gender == "female"){
+		else if(this.content[this.pPointer].gender == "Female"){
 			genderLabel.textContent = "♀"
 			genderLabel.style.color = "pink"
 		}
@@ -328,28 +328,44 @@ class SummaryView extends Menu{
 				let typesContainer = document.createElement("div")
 				typesContainer.id = "summaryViewTypeContainer"
 
+				let typeTitle = document.createElement("div")
+				typeTitle.id = "summaryViewTypeTitle"
+				typeTitle.textContent ="Types:"
+
+				typesContainer.appendChild(typeTitle)
+
 				let type1 = document.createElement("label")
 				type1.id = "summaryViewType1"
 				type1.textContent = this.content[this.pPointer].types[0]
 				typesContainer.appendChild(type1)
 				
-				if(this.content[this.pPointer].types.length>1){
+				if(this.content[this.pPointer].types[1]!="none"){
 					let type2 = document.createElement("label")
 					type2.textContent = this.content[this.pPointer].types[1]
 					type2.id = "summaryViewType2"
 					typesContainer.appendChild(type2)
 				}
 
+				let abilityTitle = document.createElement("div")
+				abilityTitle.id = "summaryViewAbilityTitle"
+				abilityTitle.textContent = "Ability:"
+
 				let abilityContainer = document.createElement("div")
 				abilityContainer.id = "summaryViewAbilityContainer"
-				abilityContainer.textContent = this.content[this.pPointer].ability.name
+				abilityContainer.textContent = this.content[this.pPointer].ability.ability.name
+
+				let natureTitle = document.createElement("div")
+				natureTitle.id = "summaryViewNatureTitle"
+				natureTitle.textContent = "Nature:"
 
 				let natureContainer = document.createElement("div")
 				natureContainer.id = "summaryViewNatureContainer"
-				natureContainer.textContent = this.content[this.pPointer].nature
+				natureContainer.textContent = this.content[this.pPointer].nature.name
 
 				summaryContainer.appendChild(typesContainer)
+				summaryContainer.appendChild(abilityTitle)
 				summaryContainer.appendChild(abilityContainer)
+				summaryContainer.appendChild(natureTitle)
 				summaryContainer.appendChild(natureContainer)
 
 				elem1.classList.add("summaryMenuSelectedIndicator")
@@ -414,7 +430,7 @@ class SummaryView extends Menu{
 					moveElem.className = "summaryViewMoveElement"
 
 					let moveTypeLabel = document.createElement("label")
-					moveTypeLabel.textContent = this.content[this.pPointer].moves[i].type
+					moveTypeLabel.textContent = this.content[this.pPointer].moves[i].type.name
 					moveTypeLabel.className = "summaryViewMoveType"
 
 					let moveNameLabel = document.createElement("label")
@@ -454,6 +470,10 @@ class SummaryView extends Menu{
 				description.id = "summaryViewDescription"
 				description.textContent = this.content[this.pPointer].speciesData.flavor_text_entries[0].flavor_text
 
+				descriptionBox.appendChild(descriptionHeader)
+				descriptionBox.appendChild(description)
+
+				summaryContainer.appendChild(descriptionBox)
 				elem4.classList.add("summaryMenuSelectedIndicator")
 				break
 		}
